@@ -2,7 +2,7 @@
 
 ### License
 
-PISA is licensed under the terms in [MIT license]<LICENSE.md>. By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
+PISA is licensed under the terms in [MIT license](LICENSE.md). By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
 
 ### Sign your work
 
