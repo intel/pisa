@@ -1,0 +1,688 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4. Calling Convention &#8212; Portable ISA (PISA) Specification v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = '';</script>
+    <script>let toggleHintHide = '';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'calling_convention';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="5. Memory Access" href="memory_access.html" />
+    <link rel="prev" title="3. Operands" href="operands.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Portable ISA (PISA) Specification v0.1</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="floating_point.html">3. Floating Point Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="special_registers.html">4. Special Registers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="prog.html">Programming Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">1. Syntax and Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">2. Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operands.html">3. Operands</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">4. Calling Convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory_access.html">5. Memory Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compatibility.html">6. Compatibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="instruction_set.html">Instruction Set</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="instructions_arithmetic.html">1. Integer Arithmetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_floating_point.html">2. Floating Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_logical.html">3. Logic and Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_data_movement.html">4. Data Movement and Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_comparison.html">5. Comparison and Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_control_flow.html">6. Control Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_cross_lane.html">7. Sub-group Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_memory.html">8. Memory and Atomics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_synchronization.html">9. Synchronization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="appendix.html">Appendix</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="directives.html">1. Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notices.html">2. Notices</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/calling_convention.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Calling Convention</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel">4.1. Kernel</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">4.1.1. Attributes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-parameters">4.2. Kernel Parameters</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-attributes">4.2.1. Parameter Attributes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function">4.3. Function</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linkage">4.3.1. Linkage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-arguments">4.4. Function Arguments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-return">4.5. Function Return</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="calling-convention">
+<h1><span class="section-number">4. </span>Calling Convention<a class="headerlink" href="#calling-convention" title="Link to this heading">#</a></h1>
+<p>PISA provides high-level C-like abstractions for calling and returning from a function.</p>
+<section id="kernel">
+<span id="anchor-kernel-declaration"></span><h2><span class="section-number">4.1. </span>Kernel<a class="headerlink" href="#kernel" title="Link to this heading">#</a></h2>
+<p>A kernel is an entry point for execution and is defined using the <code class="docutils literal notranslate"><span class="pre">.kernel</span></code> directive.
+Kernel cannot have a return value, but may have zero or more arguments. All kernel
+arguments are read-only and have per-kernel scope, i.e. all work-items receive the
+same value of each kernel argument.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.kernel</span><span class="w"> </span><span class="nv">@foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// kernel body</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Kernel can only be invoked from the host program.</p>
+</div>
+<section id="attributes">
+<span id="anchor-kernel-attributes"></span><h3><span class="section-number">4.1.1. </span>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h3>
+<p>Several optional attributes may be specified for the kernels, using
+<code class="docutils literal notranslate"><span class="pre">.attribute_name(value)</span></code> or <code class="docutils literal notranslate"><span class="pre">.attribute_name</span></code> syntax. They are
+declared between <code class="docutils literal notranslate"><span class="pre">.kernel</span></code> and its name, and are separated by spaces.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.kernel</span><span class="w"> </span><span class="kd">.reqd_work_group_size</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="kd">.vec_type_hint</span><span class="p">(</span><span class="nf">int2</span><span class="err">)</span><span class="w"> </span><span class="nv">@test</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// kernel body</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">.reqd_work_group_size(X,</span> <span class="pre">Y,</span> <span class="pre">Z)</span></code></dt><dd><p>Specifies required work-group size.
+The value <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">Y</span></code>, and <code class="docutils literal notranslate"><span class="pre">Z</span></code> specify the size of each dimension.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">.vec_type_hint(TYPE)</span></code></dt><dd><p>Specifies a hint of the computation width of the decorated kernel.
+The value <code class="docutils literal notranslate"><span class="pre">TYPE</span></code> may be <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">int2</span></code>, or any other scalar or
+built-in vector type defined by the OpenCL specification.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="kernel-parameters">
+<span id="anchor-kernel-parameters"></span><h2><span class="section-number">4.2. </span>Kernel Parameters<a class="headerlink" href="#kernel-parameters" title="Link to this heading">#</a></h2>
+<p>Kernel parameters are decorated using mandatory <code class="docutils literal notranslate"><span class="pre">.param</span></code> directive. Each argument is
+modeled as a byte array stored in an abstract location pointed to by corresponding parameter.
+Size of the argument in bytes must be specified in corresponding parameter declaration.</p>
+<p>Argument data is loaded into registers using special <a class="reference internal" href="instructions_memory.html#instruction-ld-param"><span class="std std-ref">ld.param</span></a> instruction.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.kernel</span><span class="w"> </span><span class="nv">@foo</span><span class="p">(</span><span class="kd">.param</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="nv">%arg0</span><span class="p">,</span><span class="w"> </span><span class="kd">.param</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="nv">%arg1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%larg0</span><span class="p">,</span><span class="w"> </span><span class="nv">%larg1</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// load contents of %arg0</span>
+<span class="w">   </span><span class="nf">ld.param.32b</span><span class="w"> </span><span class="nv">%larg0</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%arg0</span><span class="p">];</span>
+<span class="w">   </span><span class="c1">// load contents of %arg1[4]</span>
+<span class="w">   </span><span class="nf">ld.param.32b</span><span class="w"> </span><span class="nv">%larg1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%arg1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Kernel parameters can only be referenced by <code class="docutils literal notranslate"><span class="pre">ld.param</span></code> instruction.</p>
+</div>
+<p>It is the responsibility of the PISA producer to define how to access struct members
+via the <code class="docutils literal notranslate"><span class="pre">ld.param</span></code> instruction. Consider the following <strong>naturally aligned</strong> struct:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">structure declaration in host program</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// | x | - | y | y | z | - | - | - | w | w | w | w |</span>
+<span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">   </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">short</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">   </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">z</span><span class="p">;</span>
+<span class="w">   </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">w</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">structure access within kernel</span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.kernel</span><span class="w"> </span><span class="nv">@foo</span><span class="p">(</span><span class="kd">.param</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="w"> </span><span class="nv">%arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.8b</span><span class="w"> </span><span class="nv">%local_x</span><span class="p">,</span><span class="w"> </span><span class="nv">%local_z</span><span class="p">;</span>
+<span class="w">   </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="nv">%local_y</span><span class="p">;</span>
+<span class="w">   </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%local_w</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// x is byte-aligned at offset 0</span>
+<span class="w">   </span><span class="nf">ld.param.8b</span><span class="w"> </span><span class="nv">%local_x</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%arg</span><span class="p">];</span>
+<span class="w">   </span><span class="c1">// y is aligned to 2 bytes at offset 2</span>
+<span class="w">   </span><span class="nf">ld.param.16b</span><span class="w"> </span><span class="nv">%local_y</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%arg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">];</span>
+<span class="w">   </span><span class="c1">// z is byte-aligned at offset 4</span>
+<span class="w">   </span><span class="nf">ld.param.8b</span><span class="w"> </span><span class="nv">%local_z</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%arg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+<span class="w">   </span><span class="c1">// w is aligned to 4 bytes at offset 8</span>
+<span class="w">   </span><span class="nf">ld.param.32b</span><span class="w"> </span><span class="nv">%local_w</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%arg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<section id="parameter-attributes">
+<span id="anchor-parameter-attributes"></span><h3><span class="section-number">4.2.1. </span>Parameter Attributes<a class="headerlink" href="#parameter-attributes" title="Link to this heading">#</a></h3>
+<p>Several optional attributes may be specified for kernel parameters, using
+<code class="docutils literal notranslate"><span class="pre">.attribute_name(value)</span></code> or <code class="docutils literal notranslate"><span class="pre">.attribute_name</span></code> syntax. They are
+declared between <code class="docutils literal notranslate"><span class="pre">.param</span></code> and the parameter name, and are separated by spaces.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.kernel</span><span class="w"> </span><span class="nv">@foo</span><span class="p">(</span><span class="kd">.param</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="kd">.align</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="kd">.addrspace</span><span class="p">(</span><span class="nf">global</span><span class="err">)</span><span class="w"> </span><span class="nv">%arg0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// kernel body</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">.addrspace(ADDRSPACE)</span></code></dt><dd><p>Specifies address space memory object points to.
+<code class="docutils literal notranslate"><span class="pre">ADDRSPACE</span></code> can be <code class="docutils literal notranslate"><span class="pre">global</span></code>, <code class="docutils literal notranslate"><span class="pre">shared</span></code>, or <code class="docutils literal notranslate"><span class="pre">const</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">.align(BYTE)</span></code></dt><dd><p>Specifies the alignment of the kernel parameter in the kernel argument buffer.
+The default alignment is 8 bytes; <code class="docutils literal notranslate"><span class="pre">BYTE</span></code> must be a power of two, and specifies
+the alignment in bytes.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">.ptr_align(BYTE)</span></code></dt><dd><p>Specifies the alignment of the memory pointed to by the kernel parameter.
+<code class="docutils literal notranslate"><span class="pre">BYTE</span></code> must be a power of two, and specifies alignment of the pointee in bytes.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="function">
+<span id="anchor-function-declaration"></span><h2><span class="section-number">4.3. </span>Function<a class="headerlink" href="#function" title="Link to this heading">#</a></h2>
+<p>Functions are declared/defined using the <code class="docutils literal notranslate"><span class="pre">.function</span></code> directive. Functions may have zero
+or more arguments, and may return a value to the caller. The return type <code class="docutils literal notranslate"><span class="pre">void</span></code> indicates
+that the function does not return a value.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.function</span><span class="w"> </span><span class="nf">void</span><span class="w"> </span><span class="nv">@foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// function body</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Functions can only be invoked from kernels or other functions.</p>
+</div>
+<section id="linkage">
+<span id="anchor-function-linkage"></span><h3><span class="section-number">4.3.1. </span>Linkage<a class="headerlink" href="#linkage" title="Link to this heading">#</a></h3>
+<p>By default, functions have internal linkage, meaning that they
+are only visible within the module in which they are defined.</p>
+<p>An <code class="docutils literal notranslate"><span class="pre">.export</span></code> directive is used to indicate external visibility of a function
+across different modules. Exported functions can be invoked by other kernels
+and/or functions defined in another module.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// allow access to function @foo from another module</span>
+<span class="kd">.export</span><span class="w"> </span><span class="kd">.function</span><span class="w"> </span><span class="nf">void</span><span class="w"> </span><span class="nv">@foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// function body</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>An <code class="docutils literal notranslate"><span class="pre">.import</span></code> directive is used to indicate that a function is defined
+outside the current module. Imported functions must not have a function body
+defined in the current module, and are only declared with their signature.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.import</span><span class="w"> </span><span class="kd">.function</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">@foo</span><span class="p">(</span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="p">,</span><span class="w"> </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="function-arguments">
+<h2><span class="section-number">4.4. </span>Function Arguments<a class="headerlink" href="#function-arguments" title="Link to this heading">#</a></h2>
+<p>Function arguments are passed from caller to callee as actual arguments in a
+<a class="reference internal" href="instructions_control_flow.html#instruction-call"><span class="std std-ref">call</span></a> instruction. Each actual argument must be a
+<a class="reference internal" href="variables.html#anchor-register-variables"><span class="std std-ref">register</span></a> variable, and must match the type
+specified in the function declaration, as no implicit conversion is allowed.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.function</span><span class="w"> </span><span class="nf">void</span><span class="w"> </span><span class="nv">@foo</span><span class="p">(</span><span class="na">.reg</span><span class="w"> </span><span class="mf">.32</span><span class="n">b</span><span class="w"> </span><span class="nv">%arg0</span><span class="p">,</span><span class="w"> </span><span class="na">.reg</span><span class="w"> </span><span class="na">.v2</span><span class="mf">.32</span><span class="n">b</span><span class="w"> </span><span class="nv">%arg1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// function body</span>
+<span class="p">}</span>
+<span class="kd">.function</span><span class="w"> </span><span class="nf">void</span><span class="w"> </span><span class="nv">@caller</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%a</span><span class="p">;</span>
+<span class="w">   </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.32b</span><span class="w"> </span><span class="nv">%b</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// ... code ...</span>
+<span class="w">   </span><span class="nf">call</span><span class="w"> </span><span class="n">void</span><span class="p">,</span><span class="w"> </span><span class="nv">@foo</span><span class="p">(</span><span class="nv">%a</span><span class="p">,</span><span class="w"> </span><span class="nv">%b</span><span class="p">);</span>
+<span class="w">   </span><span class="c1">// ... code ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="variables.html#anchor-predicate-variables"><span class="std std-ref">Predicate</span></a> variables cannot be used as function arguments.</p>
+</div>
+</section>
+<section id="function-return">
+<h2><span class="section-number">4.5. </span>Function Return<a class="headerlink" href="#function-return" title="Link to this heading">#</a></h2>
+<p>Function may return a single value to a caller using the <a class="reference internal" href="instructions_control_flow.html#instruction-return"><span class="std std-ref">return</span></a> instruction.
+The return value may be an immediate or a <a class="reference internal" href="variables.html#anchor-register-variables"><span class="std std-ref">register</span></a> variable matching the
+return type specified in the function declaration, as no implicit conversion is allowed. If no return
+value is needed, <code class="docutils literal notranslate"><span class="pre">void</span></code> must be specified as the return type.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// function returning no value</span>
+<span class="kd">.function</span><span class="w"> </span><span class="nf">void</span><span class="w"> </span><span class="nv">@foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// function body</span>
+<span class="w">   </span><span class="nf">return</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// function returning a 32-bit value</span>
+<span class="kd">.function</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">@foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%rv</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// ... code ...</span>
+<span class="w">   </span><span class="nf">return</span><span class="w"> </span><span class="nv">%rv</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="variables.html#anchor-predicate-variables"><span class="std std-ref">Predicate</span></a> variables cannot be used as a function return value.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">return</span></code> instruction must be the last instruction in the body of a non-void function.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="operands.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Operands</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="memory_access.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Memory Access</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel">4.1. Kernel</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">4.1.1. Attributes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-parameters">4.2. Kernel Parameters</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parameter-attributes">4.2.1. Parameter Attributes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function">4.3. Function</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linkage">4.3.1. Linkage</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-arguments">4.4. Function Arguments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#function-return">4.5. Function Return</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Intel Corporation.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

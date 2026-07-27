@@ -1,0 +1,83 @@
+.wy-side-nav-search, .wy-nav-top {
+	background: #4308E5;
+}
+
+/* do not display icon next to 'admonition' */
+.admonition-title:after {display: none !important;} 
+
+div.document table.docutils {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+div.document div.documentwrapper {
+  max-width: 72rem;
+}
+/* pydata-sphinx-theme uses bd-article-container for the main content column.
+   Use a viewport-relative width so side margins stay a constant fraction of
+   the window: zooming out yields smaller text with less wrapping rather than
+   wider white borders. */
+.bd-article-container {
+  max-width: 80vw;
+}
+/* The theme caps the whole content row (.bd-page-width) at a fixed 88rem,
+   which is what creates the growing white borders when zooming out. Override
+   it with a viewport-relative cap (higher specificity than the theme's
+   media-query rule) so the margins stay a constant fraction of the window. */
+.bd-container__inner.bd-page-width {
+  max-width: 90vw;
+}
+div.sphinxsidebar {
+  width: 20rem;
+}
+div#right_sidebar {
+  width: 20rem;
+}
+
+/* version-selector support */
+.version-selector select {
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* admonition */
+.admonition.syntax-admonition .admonition-title {
+    color: #2980b9;
+    max-width: 100%;
+    overflow-x: auto;
+    /*white-space: nowrap;*/
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.toggle-button {
+    color: #5555ff; /* Matches the border color for the toggle icon */
+}
+
+.underlined-text {
+  text-decoration: underline;
+}
+.bold-underlined-text {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.syntax-literal {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+/* restrictions need more spaces due to ``text`` enclosed in box */
+.restriction-literal {
+  line-height: 1.6 !important;
+  /* Adjust this value as needed */
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* hide the keyboard shortcut hint for search button */
+.search-button__kbd-shortcut {
+  display: none !important;
+}

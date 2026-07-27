@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction &#8212; Portable ISA (PISA) Specification v0.1</title>
+    <title>2. Notices &#8212; Portable ISA (PISA) Specification v0.1</title>
   
   
   
@@ -48,11 +48,10 @@
     <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notices';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Architecture Model" href="arch.html" />
-    <link rel="prev" title="Start" href="root.html" />
+    <link rel="prev" title="1. Directives" href="directives.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -133,7 +132,7 @@
      
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="index.html">
   
   
   
@@ -163,7 +162,7 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
@@ -192,9 +191,9 @@
 <li class="toctree-l2"><a class="reference internal" href="instructions_synchronization.html">9. Synchronization</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="appendix.html">Appendix</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="appendix.html">Appendix</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="directives.html">1. Directives</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notices.html">2. Notices</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">2. Notices</a></li>
 </ul>
 </details></li>
 </ul>
@@ -251,7 +250,7 @@
       
       
       
-      <li><a href="_sources/index.rst" target="_blank"
+      <li><a href="_sources/notices.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -335,7 +334,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction</h1>
+    <h1>Notices</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -345,8 +344,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-overview">Document Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#legal-notices-and-disclaimers">2.1. Legal Notices and Disclaimers</a></li>
 </ul>
             </nav>
         </div>
@@ -358,56 +356,22 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
-<p>This document specifies portable instruction set architecture (PISA) for Intel GPUs,
-providing a programming model and instruction set for general-purpose parallel programming.</p>
-<section id="goals">
-<h2>Goals<a class="headerlink" href="#goals" title="Link to this heading">#</a></h2>
-<p>The goals of PISA include:</p>
+  <section id="notices">
+<h1><span class="section-number">2. </span>Notices<a class="headerlink" href="#notices" title="Link to this heading">#</a></h1>
+<section id="legal-notices-and-disclaimers">
+<h2><span class="section-number">2.1. </span>Legal Notices and Disclaimers<a class="headerlink" href="#legal-notices-and-disclaimers" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><ul class="simple">
-<li><p>Provide a stable, portable ISA for compilers targeting Intel GPUs</p></li>
-<li><p>Provide “close-to-the-metal” performance comparable to native machine ISA code</p></li>
-<li><p>Facilitate advanced programming support such as hand-written libraries and inline assembly</p></li>
-</ul>
-</div></blockquote>
-</section>
-<section id="document-overview">
-<h2>Document Overview<a class="headerlink" href="#document-overview" title="Link to this heading">#</a></h2>
-<p>This document is organized as follows:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Architecture Model</p>
-<ul>
-<li><p><a class="reference internal" href="virtual_machine.html"><span class="doc">Virtual Machine</span></a> — OpenCL 3.0–based execution and memory model.</p></li>
-<li><p><a class="reference internal" href="spaces_types.html"><span class="doc">Address Spaces and Types</span></a> — address spaces and data types.</p></li>
-<li><p><a class="reference internal" href="floating_point.html"><span class="doc">Floating Point</span></a> — floating-point data types and semantics.</p></li>
-<li><p><a class="reference internal" href="special_registers.html"><span class="doc">Special Registers</span></a> — access to execution context.</p></li>
-</ul>
-</li>
-<li><p>Programming Interface</p>
-<ul>
-<li><p><a class="reference internal" href="syntax.html"><span class="doc">Assembly Syntax</span></a> — format and program structure of PISA assembly.</p></li>
-<li><p><a class="reference internal" href="variables.html"><span class="doc">Variables</span></a> — variable declarations, linkage, and initializers.</p></li>
-<li><p><a class="reference internal" href="operands.html"><span class="doc">Operands and Addressing</span></a> — operand types and usage patterns.</p></li>
-<li><p><a class="reference internal" href="calling_convention.html"><span class="doc">Calling Convention</span></a> — declaring and invoking kernels and functions.</p></li>
-<li><p><a class="reference internal" href="memory_access.html"><span class="doc">Memory Access</span></a> — memory access restrictions and semantics.</p></li>
-<li><p><a class="reference internal" href="compatibility.html"><span class="doc">Compatibility</span></a> — versioning and backward-compatibility guarantees.</p></li>
-</ul>
-</li>
-<li><p>Instruction Reference</p>
-<ul>
-<li><p><a class="reference internal" href="instruction_set.html"><span class="doc">Instruction Set</span></a> — description of core instructions.</p></li>
-</ul>
-</li>
-<li><p>Appendix</p>
-<ul>
-<li><p><a class="reference internal" href="directives.html"><span class="doc">Index of PISA directives</span></a></p></li>
-<li><p><a class="reference internal" href="notices.html"><span class="doc">Legal Notices and Disclaimers</span></a></p></li>
-</ul>
-</li>
-</ul>
+<div><p>© Intel Corporation. Intel, the Intel logo, and other Intel marks are trademarks of Intel Corporation or its
+subsidiaries. Other names and brands may be claimed as the property of others.</p>
+<p>OpenCL and the OpenCL logo are trademarks of Apple Inc. used by permission by Khronos.</p>
+<p>You may not use or facilitate the use of this document in connection with any infringement or other legal
+analysis concerning Intel products described herein. You agree to grant Intel a non-exclusive, royalty-free
+license to any patent claim thereafter drafted which includes subject matter disclosed herein.</p>
+<p>No license (express or implied, by estoppel or otherwise) to any intellectual property rights is granted
+by this document.</p>
+<p>Intel disclaims all express and implied warranties, including without limitation, the implied warranties
+of merchantability, fitness for a particular purpose, and non-infringement, as well as any warranty arising
+from course of performance, course of dealing, or usage in trade.</p>
 </div></blockquote>
 </section>
 </section>
@@ -424,22 +388,13 @@ providing a programming model and instruction set for general-purpose parallel p
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="root.html"
+       href="directives.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Start</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Directives</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="arch.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Architecture Model</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -457,8 +412,7 @@ providing a programming model and instruction set for general-purpose parallel p
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-overview">Document Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#legal-notices-and-disclaimers">2.1. Legal Notices and Disclaimers</a></li>
 </ul>
   </nav></div>
 

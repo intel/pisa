@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction &#8212; Portable ISA (PISA) Specification v0.1</title>
+    <title>6. Compatibility &#8212; Portable ISA (PISA) Specification v0.1</title>
   
   
   
@@ -48,11 +48,11 @@
     <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'compatibility';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Architecture Model" href="arch.html" />
-    <link rel="prev" title="Start" href="root.html" />
+    <link rel="next" title="Instruction Set" href="instruction_set.html" />
+    <link rel="prev" title="5. Memory Access" href="memory_access.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -133,7 +133,7 @@
      
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="index.html">
   
   
   
@@ -163,7 +163,7 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
@@ -171,13 +171,13 @@
 <li class="toctree-l2"><a class="reference internal" href="special_registers.html">4. Special Registers</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="prog.html">Programming Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="prog.html">Programming Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="syntax.html">1. Syntax and Format</a></li>
 <li class="toctree-l2"><a class="reference internal" href="variables.html">2. Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="operands.html">3. Operands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="calling_convention.html">4. Calling Convention</a></li>
 <li class="toctree-l2"><a class="reference internal" href="memory_access.html">5. Memory Access</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compatibility.html">6. Compatibility</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">6. Compatibility</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="instruction_set.html">Instruction Set</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -251,7 +251,7 @@
       
       
       
-      <li><a href="_sources/index.rst" target="_blank"
+      <li><a href="_sources/compatibility.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -335,7 +335,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction</h1>
+    <h1>Compatibility</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -345,8 +345,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-overview">Document Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directives">6.1. Directives</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#version">6.1.1. Version</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#target">6.1.2. Target</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-model">6.2. Layer Model</a></li>
 </ul>
             </nav>
         </div>
@@ -358,57 +362,101 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
-<p>This document specifies portable instruction set architecture (PISA) for Intel GPUs,
-providing a programming model and instruction set for general-purpose parallel programming.</p>
-<section id="goals">
-<h2>Goals<a class="headerlink" href="#goals" title="Link to this heading">#</a></h2>
-<p>The goals of PISA include:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Provide a stable, portable ISA for compilers targeting Intel GPUs</p></li>
-<li><p>Provide “close-to-the-metal” performance comparable to native machine ISA code</p></li>
-<li><p>Facilitate advanced programming support such as hand-written libraries and inline assembly</p></li>
+  <section id="compatibility">
+<h1><span class="section-number">6. </span>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading">#</a></h1>
+<p>To achieve the goal of stable and portable PISA, each PISA module starts with a
+header that defines the version of the PISA specification and target architecture
+that the module is intended for. This information is used by the PISA consumer to
+ensure that modules are compatible with each other and with the actual GPU target,
+and to enforce constraints on the usage of features and instructions.</p>
+<section id="directives">
+<h2><span class="section-number">6.1. </span>Directives<a class="headerlink" href="#directives" title="Link to this heading">#</a></h2>
+<section id="version">
+<span id="anchor-pisa-version"></span><h3><span class="section-number">6.1.1. </span>Version<a class="headerlink" href="#version" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">.version</span></code> directive specifies the version of the PISA specification used
+by the module and must be the first statement in a PISA module. The version is
+composed of <code class="docutils literal notranslate"><span class="pre">major</span></code> and <code class="docutils literal notranslate"><span class="pre">minor</span></code> values, with the following characteristics:</p>
+<ul class="simple">
+<li><p>changes in <strong>major</strong> version indicate incompatible changes to the specification</p></li>
+<li><p>changes in <strong>minor</strong> version indicate backward-compatible additions.</p></li>
 </ul>
-</div></blockquote>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.version</span><span class="w"> </span><span class="mi">0</span><span class="err">.</span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>It is a compile-time error if an unknown <code class="docutils literal notranslate"><span class="pre">.version</span></code> value is specified.</p></li>
+<li><p>It is a link-time error if multiple modules specify different <code class="docutils literal notranslate"><span class="pre">major</span></code> values.</p></li>
+</ul>
+</div>
 </section>
-<section id="document-overview">
-<h2>Document Overview<a class="headerlink" href="#document-overview" title="Link to this heading">#</a></h2>
-<p>This document is organized as follows:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Architecture Model</p>
+<section id="target">
+<span id="anchor-pisa-target"></span><h3><span class="section-number">6.1.2. </span>Target<a class="headerlink" href="#target" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">.target</span></code> directive specifies the target architecture for which the module is intended
+and must be the second statement in a PISA module. The target architecture value is used to
+determine the set of supported features and instructions required to execute the module.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.target</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>It is a compile-time error if an unknown <code class="docutils literal notranslate"><span class="pre">.target</span></code> value is specified.</p></li>
+<li><p>It is a link-time error if multiple modules specify incompatible <code class="docutils literal notranslate"><span class="pre">.target</span></code> values.</p></li>
+<li><p>It is an error to use features or instructions not supported by the specified <code class="docutils literal notranslate"><span class="pre">.target</span></code> value.</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="layer-model">
+<h2><span class="section-number">6.2. </span>Layer Model<a class="headerlink" href="#layer-model" title="Link to this heading">#</a></h2>
+<p>Each PISA target architecture defines a set of supported features and instructions.
+Newer architectures may add features or instructions and may extend existing ones.
+A PISA program remains compatible with a newer architecture as long as it uses
+features and instructions still supported on the newer target.</p>
+<p>Each PISA instruction in the <a class="reference internal" href="instruction_set.html#anchor-instruction-set"><span class="std std-ref">instruction set</span></a> is annotated
+with the minimum PISA version and target architecture required to use it. Each PISA feature
+is similarly annotated in its definition. The PISA producer may use this information when
+generating the <a class="reference internal" href="#anchor-pisa-target"><span class="std std-ref">.target</span></a> directive in the module header.</p>
+<p>The following naming convention is used for PISA target:</p>
+<ul class="simple">
+<li><p>a number indicating generation (e.g. 100)</p>
 <ul>
-<li><p><a class="reference internal" href="virtual_machine.html"><span class="doc">Virtual Machine</span></a> — OpenCL 3.0–based execution and memory model.</p></li>
-<li><p><a class="reference internal" href="spaces_types.html"><span class="doc">Address Spaces and Types</span></a> — address spaces and data types.</p></li>
-<li><p><a class="reference internal" href="floating_point.html"><span class="doc">Floating Point</span></a> — floating-point data types and semantics.</p></li>
-<li><p><a class="reference internal" href="special_registers.html"><span class="doc">Special Registers</span></a> — access to execution context.</p></li>
+<li><p>backward compatible with all previous generations</p></li>
 </ul>
 </li>
-<li><p>Programming Interface</p>
+<li><p>an optional letter indicating product line (e.g. ‘c’ for compute)</p>
 <ul>
-<li><p><a class="reference internal" href="syntax.html"><span class="doc">Assembly Syntax</span></a> — format and program structure of PISA assembly.</p></li>
-<li><p><a class="reference internal" href="variables.html"><span class="doc">Variables</span></a> — variable declarations, linkage, and initializers.</p></li>
-<li><p><a class="reference internal" href="operands.html"><span class="doc">Operands and Addressing</span></a> — operand types and usage patterns.</p></li>
-<li><p><a class="reference internal" href="calling_convention.html"><span class="doc">Calling Convention</span></a> — declaring and invoking kernels and functions.</p></li>
-<li><p><a class="reference internal" href="memory_access.html"><span class="doc">Memory Access</span></a> — memory access restrictions and semantics.</p></li>
-<li><p><a class="reference internal" href="compatibility.html"><span class="doc">Compatibility</span></a> — versioning and backward-compatibility guarantees.</p></li>
+<li><p>backward compatible with product line on current and previous generations</p></li>
 </ul>
 </li>
-<li><p>Instruction Reference</p>
+<li><p>an optional letter ‘a’ indicating presence of target-specific features</p>
 <ul>
-<li><p><a class="reference internal" href="instruction_set.html"><span class="doc">Instruction Set</span></a> — description of core instructions.</p></li>
-</ul>
-</li>
-<li><p>Appendix</p>
-<ul>
-<li><p><a class="reference internal" href="directives.html"><span class="doc">Index of PISA directives</span></a></p></li>
-<li><p><a class="reference internal" href="notices.html"><span class="doc">Legal Notices and Disclaimers</span></a></p></li>
+<li><p>not backward compatible with any other target</p></li>
 </ul>
 </li>
 </ul>
-</div></blockquote>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id1">
+<caption><span class="caption-text"><strong>PISA Compatibility Matrix</strong></span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>PISA .target</p></th>
+<th class="head"><p>Can execute PISA instructions and features from</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>100</strong></p></td>
+<td><p>100</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>100c</strong></p></td>
+<td><p>100c, 100</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>100ca</strong></p></td>
+<td><p>100ca, 100c, 100</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 </section>
 
@@ -424,20 +472,20 @@ providing a programming model and instruction set for general-purpose parallel p
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="root.html"
+       href="memory_access.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Start</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Memory Access</p>
       </div>
     </a>
     <a class="right-next"
-       href="arch.html"
+       href="instruction_set.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Architecture Model</p>
+        <p class="prev-next-title">Instruction Set</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -457,8 +505,12 @@ providing a programming model and instruction set for general-purpose parallel p
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-overview">Document Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directives">6.1. Directives</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#version">6.1.1. Version</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#target">6.1.2. Target</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#layer-model">6.2. Layer Model</a></li>
 </ul>
   </nav></div>
 

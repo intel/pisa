@@ -1,0 +1,659 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>3. Operands &#8212; Portable ISA (PISA) Specification v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = '';</script>
+    <script>let toggleHintHide = '';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'operands';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="4. Calling Convention" href="calling_convention.html" />
+    <link rel="prev" title="2. Variables" href="variables.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Portable ISA (PISA) Specification v0.1</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="floating_point.html">3. Floating Point Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="special_registers.html">4. Special Registers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="prog.html">Programming Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">1. Syntax and Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">2. Variables</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">3. Operands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calling_convention.html">4. Calling Convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory_access.html">5. Memory Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compatibility.html">6. Compatibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="instruction_set.html">Instruction Set</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="instructions_arithmetic.html">1. Integer Arithmetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_floating_point.html">2. Floating Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_logical.html">3. Logic and Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_data_movement.html">4. Data Movement and Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_comparison.html">5. Comparison and Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_control_flow.html">6. Control Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_cross_lane.html">7. Sub-group Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_memory.html">8. Memory and Atomics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_synchronization.html">9. Synchronization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="appendix.html">Appendix</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="directives.html">1. Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notices.html">2. Notices</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/operands.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Operands</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#register-operands">3.1. Register Operands</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-values">3.2. Immediate Values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#address-operands">3.3. Address Operands</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-addressing">3.3.1. Generic Addressing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-operands">3.4. Vector Operands</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="operands">
+<h1><span class="section-number">3. </span>Operands<a class="headerlink" href="#operands" title="Link to this heading">#</a></h1>
+<p id="anchor-operands">PISA instruction has zero or more operands, whose size and type are
+defined by the instruction template. No implicit type conversion is performed
+on the operands, and each operand may be a register variable, an immediate value,
+or an address.</p>
+<section id="register-operands">
+<h2><span class="section-number">3.1. </span>Register Operands<a class="headerlink" href="#register-operands" title="Link to this heading">#</a></h2>
+<p>A register operand is specified using the name of a <a class="reference internal" href="variables.html#anchor-register-variables"><span class="std std-ref">register</span></a>
+or a <a class="reference internal" href="variables.html#anchor-predicate-variables"><span class="std std-ref">predicate</span></a> variable.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="kd">.pred</span><span class="w"> </span><span class="nv">%pin</span><span class="p">,</span><span class="w"> </span><span class="nv">%pout</span><span class="p">;</span>
+
+<span class="nf">iadd.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="nf">uaddc.ci.co.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%pout</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%pin</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="immediate-values">
+<h2><span class="section-number">3.2. </span>Immediate Values<a class="headerlink" href="#immediate-values" title="Link to this heading">#</a></h2>
+<p>An immediate value can be used as a source operand anywhere a scalar register variable
+is allowed, unless specified otherwise by the instruction template.</p>
+<p>An immediate value used in integer instructions can be specified as a decimal or a
+hexadecimal literal (prefixed with <code class="docutils literal notranslate"><span class="pre">0x</span></code> or <code class="docutils literal notranslate"><span class="pre">0X</span></code>). Hexadecimal literals are zero-extended,
+while decimal literals are sign-extended to 64 bits. If the resulting 64-bit value does
+not mathematically fit within the signed or unsigned range of the operand size, a
+parser error will be generated.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+
+<span class="w"> </span><span class="c1">// add -1 to %src0 and store the result in %dst</span>
+<span class="w"> </span><span class="nf">iadd.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="c1">// add 15 to %src0 and store the result in %dst</span>
+<span class="w"> </span><span class="nf">iadd.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="mh">0xF</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>An immediate value used in floating-point instructions may either be a decimal
+floating-point literal, or in IEEE hexadecimal format. Decimal floating-point literal
+is treated as a double-precision value, which is converted to type of an operand using
+implementation-defined rounding and denorm mode.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Size of hexadecimal floating-point value must match size of operand, as no type conversion is allowed.</p>
+</div>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+
+<span class="w"> </span><span class="c1">// add single-precision 4.2 to %src0 and store the result in %dst</span>
+<span class="w"> </span><span class="nf">fadd.f</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="mf">4.2</span><span class="p">;</span>
+<span class="c1">// add single-precision -1.0 to %src0 and store the result in %dst</span>
+<span class="w"> </span><span class="nf">fadd.f</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="mh">0xBF800000</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is no provision for a vector of immediate values.</p>
+</div>
+</section>
+<section id="address-operands">
+<span id="anchor-address-operands"></span><h2><span class="section-number">3.3. </span>Address Operands<a class="headerlink" href="#address-operands" title="Link to this heading">#</a></h2>
+<p>Address operands are used in memory-related instructions and are written in the
+form <code class="docutils literal notranslate"><span class="pre">[Value1]</span></code> or <code class="docutils literal notranslate"><span class="pre">[Value1</span> <span class="pre">+</span> <span class="pre">Value2]</span></code>. Instruction descriptions reference
+the following shorthand names for common operand forms:</p>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id1">
+<caption><span class="caption-text"><strong>Address operand forms</strong></span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Meaning</p></th>
+<th class="head"><p>Syntax</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MemRR</span></code></p></td>
+<td><p>32-bit or 64-bit base address with a register offset</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[reg</span> <span class="pre">+</span> <span class="pre">reg]</span></code>, <code class="docutils literal notranslate"><span class="pre">[var</span> <span class="pre">+</span> <span class="pre">reg]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MemRI</span></code></p></td>
+<td><p>32-bit or 64-bit base address with a signed immediate offset</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[reg</span> <span class="pre">+</span> <span class="pre">imm]</span></code>, <code class="docutils literal notranslate"><span class="pre">[var</span> <span class="pre">+</span> <span class="pre">imm]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MemR</span></code></p></td>
+<td><p>32-bit or 64-bit base address without an explicit offset</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[reg]</span></code>, <code class="docutils literal notranslate"><span class="pre">[var]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MemI</span></code></p></td>
+<td><p>Immediate address value without an explicit offset</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[imm]</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Here <a class="reference internal" href="variables.html#anchor-register-variables"><span class="std std-ref">reg</span></a> denotes a scalar register, <a class="reference internal" href="variables.html#anchor-memory-variables"><span class="std std-ref">var</span></a> denotes a memory variable,
+and <code class="docutils literal notranslate"><span class="pre">imm</span></code> denotes an immediate value accepted by the instruction template.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Not all instructions support all operand forms.</p>
+</div>
+<p>A memory variable represents the byte address of a variable in a memory
+<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">address space</span></a>. The address size is interpreted as follows:</p>
+<ul class="simple">
+<li><p>32-bit value for <code class="docutils literal notranslate"><span class="pre">.private</span></code> and <code class="docutils literal notranslate"><span class="pre">.shared</span></code> variables.</p></li>
+<li><p>64-bit value for <code class="docutils literal notranslate"><span class="pre">.global</span></code> and <code class="docutils literal notranslate"><span class="pre">.const</span></code> variables.</p></li>
+<li><p>32 or 64-bit value for a register variable, depending on its declaration.</p></li>
+</ul>
+<p>Either 32-bit or 64-bit arithmetic is performed based on the address
+operand values, and the result serves as the memory access address.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%reg32</span><span class="p">;</span>
+<span class="kd">.const</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@constVar</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="p">};</span>
+<span class="kd">.shared</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@sharedVar</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+
+<span class="c1">// load value from global address space specified by %reg64</span>
+<span class="nf">ld.global.32b</span><span class="w"> </span><span class="nv">%reg32</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%reg64</span><span class="p">];</span>
+<span class="c1">// load value from 32bit shared address space specified by @sharedVar[4]</span>
+<span class="nf">ld.shared.32b</span><span class="w"> </span><span class="nv">%reg32</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">@sharedVar</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+<span class="c1">// load value from 64bit const address space specified by @constVar[0]</span>
+<span class="nf">ld.const.32b</span><span class="w"> </span><span class="nv">%reg32</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">@constVar</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An out-of-bounds memory access results in undefined behavior.</p>
+</div>
+<section id="generic-addressing">
+<span id="anchor-generic-addressing"></span><h3><span class="section-number">3.3.1. </span>Generic Addressing<a class="headerlink" href="#generic-addressing" title="Link to this heading">#</a></h3>
+<p>Address operands also support a generic addressing mode where the address space
+is not specified at compile time. In this mode, the address operand is treated
+as a 64-bit <strong>generic</strong> address, with translation to the concrete address space
+being accomplished via <a class="reference internal" href="instructions_data_movement.html#instruction-addrcast"><span class="std std-ref">addrcast</span></a> instruction.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="kd">.private</span><span class="w"> </span><span class="nv">@A</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
+<span class="w"> </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%gen64</span><span class="p">;</span>
+<span class="w"> </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%prv32</span><span class="p">,</span><span class="w"> </span><span class="nv">%reg32</span><span class="p">;</span>
+
+<span class="w"> </span><span class="c1">// convert 32-bit private address into a 64-bit generic address</span>
+<span class="w"> </span><span class="nf">addrcast.generic.private</span><span class="w"> </span><span class="nv">%gen64</span><span class="p">,</span><span class="w"> </span><span class="nv">@A</span><span class="p">;</span>
+<span class="c1">// load 4 bytes from offset 12 of @A</span>
+<span class="w"> </span><span class="nf">ld.generic.32b</span><span class="w"> </span><span class="nv">%reg32</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%gen64</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">12</span><span class="p">];</span>
+<span class="w"> </span><span class="c1">// update %gen64 to point to @A[4]</span>
+<span class="w"> </span><span class="nf">iadd.64b</span><span class="w"> </span><span class="nv">%gen64</span><span class="p">,</span><span class="w"> </span><span class="nv">%gen64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="w"> </span><span class="c1">// convert 64-bit generic address back to 32-bit private address</span>
+<span class="w"> </span><span class="nf">addrcast.private.generic</span><span class="w"> </span><span class="nv">%prv32</span><span class="p">,</span><span class="w"> </span><span class="nv">%gen64</span><span class="p">;</span>
+<span class="c1">// load 4 bytes from @A[4] using the converted private address</span>
+<span class="w"> </span><span class="nf">ld.private.32b</span><span class="w"> </span><span class="nv">%reg32</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%prv32</span><span class="p">];</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="vector-operands">
+<span id="anchor-vector-operands"></span><h2><span class="section-number">3.4. </span>Vector Operands<a class="headerlink" href="#vector-operands" title="Link to this heading">#</a></h2>
+<p>Register operands of <a class="reference internal" href="spaces_types.html#anchor-vector-data-types"><span class="std std-ref">vector</span></a> type are supported by
+a limited number of memory access and data movement instructions. For all other
+instructions, each element of the vector must be accessed individually.</p>
+<p>Elements of a vector operand can be accessed by specialized instructions (e.g.
+<a class="reference internal" href="instructions_data_movement.html#instruction-extract"><span class="std std-ref">extract</span></a> and <a class="reference internal" href="instructions_data_movement.html#instruction-insert"><span class="std std-ref">insert</span></a>) or via
+swizzle syntax that allows individual access to the first 4 elements of a vector.</p>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id2">
+<caption><span class="caption-text"><strong>Swizzle Values</strong></span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Swizzle</p></th>
+<th class="head"><p>Element</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.x</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>.y</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>.z</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>.w</p></td>
+<td><p>3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.32b</span><span class="w"> </span><span class="nv">%vec</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src</span><span class="p">;</span>
+
+<span class="c1">// load 2 32-bit values</span>
+<span class="nf">ld.private.v2.32b</span><span class="w"> </span><span class="nv">%vec</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%addr</span><span class="p">];</span>
+<span class="c1">// access %vec[0]</span>
+<span class="nf">mov.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%vec</span><span class="na">.x</span><span class="p">;</span>
+<span class="c1">// add 2 elements of %vec</span>
+<span class="nf">iadd.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%vec</span><span class="na">.y</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="instructions_data_movement.html#instruction-mov"><span class="std std-ref">mov</span></a> instruction supports additional multi-element swizzles
+(<code class="docutils literal notranslate"><span class="pre">.xy</span></code>, <code class="docutils literal notranslate"><span class="pre">.zw</span></code>, and <code class="docutils literal notranslate"><span class="pre">.xyzw</span></code>) to enable data movement between vector and scalar variables.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="variables.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Variables</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="calling_convention.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Calling Convention</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#register-operands">3.1. Register Operands</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-values">3.2. Immediate Values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#address-operands">3.3. Address Operands</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generic-addressing">3.3.1. Generic Addressing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-operands">3.4. Vector Operands</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Intel Corporation.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

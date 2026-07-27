@@ -1,0 +1,713 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2. Variables &#8212; Portable ISA (PISA) Specification v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = '';</script>
+    <script>let toggleHintHide = '';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'variables';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Operands" href="operands.html" />
+    <link rel="prev" title="1. Syntax and Format" href="syntax.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Portable ISA (PISA) Specification v0.1</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="floating_point.html">3. Floating Point Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="special_registers.html">4. Special Registers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="prog.html">Programming Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">1. Syntax and Format</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">2. Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operands.html">3. Operands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calling_convention.html">4. Calling Convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory_access.html">5. Memory Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compatibility.html">6. Compatibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="instruction_set.html">Instruction Set</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="instructions_arithmetic.html">1. Integer Arithmetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_floating_point.html">2. Floating Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_logical.html">3. Logic and Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_data_movement.html">4. Data Movement and Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_comparison.html">5. Comparison and Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_control_flow.html">6. Control Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_cross_lane.html">7. Sub-group Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_memory.html">8. Memory and Atomics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_synchronization.html">9. Synchronization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="appendix.html">Appendix</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="directives.html">1. Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notices.html">2. Notices</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/variables.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Variables</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bitwidth">2.1. Bitwidth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#register-variables">2.2. Register Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predicate-variables">2.3. Predicate Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-variables">2.4. Memory Variables</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alignment">2.4.1. Alignment</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#global-variables">2.5. Global Variables</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#initializers">2.5.1. Initializers</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#zero-initializer">2.5.1.1. Zero-initializer</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#symbol-initializer">2.5.1.2. Symbol-initializer</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linkage">2.5.2. Linkage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">2.5.3. Attributes</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="variables">
+<span id="anchor-variables"></span><h1><span class="section-number">2. </span>Variables<a class="headerlink" href="#variables" title="Link to this heading">#</a></h1>
+<p>PISA variable declaration specifies its <a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">address space</span></a>,
+bitwidth, and name, along with optional attributes.</p>
+<section id="bitwidth">
+<span id="anchor-bitwidth"></span><h2><span class="section-number">2.1. </span>Bitwidth<a class="headerlink" href="#bitwidth" title="Link to this heading">#</a></h2>
+<p>Variables have a defined bit-size (bitwidth) but are otherwise untyped. Interpretation
+of data contained in a variable is up to the instruction using the variable. An instruction
+operating on 32-bit variables may treat its source operands as either signed 32-bit integers, or
+single-precision floating point values, depending on the instruction opcode. Variable
+declarations specify the bitwidth of the variable using <a class="reference internal" href="spaces_types.html#anchor-scalar-data-types"><span class="std std-ref">scalar</span></a>
+or <a class="reference internal" href="spaces_types.html#anchor-vector-data-types"><span class="std std-ref">vector</span></a> data types.</p>
+</section>
+<section id="register-variables">
+<span id="anchor-register-variables"></span><h2><span class="section-number">2.2. </span>Register Variables<a class="headerlink" href="#register-variables" title="Link to this heading">#</a></h2>
+<p>Named register declarations are used to define one or more register variables with the same bitwidth.
+Name of the register must start with a <code class="docutils literal notranslate"><span class="pre">%</span></code> and is followed by an <a class="reference internal" href="syntax.html#anchor-identifiers"><span class="std std-ref">identifier</span></a>.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// define a 32-bit register variable named %r0</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%r0</span><span class="p">;</span>
+<span class="c1">// define a 4x32-bit vector register variable named %v1</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v4.32b</span><span class="w"> </span><span class="nv">%v1</span><span class="p">;</span>
+<span class="c1">// define multiple 64-bit register variables named %d1, %d2, and %d3</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%d1</span><span class="p">,</span><span class="w"> </span><span class="nv">%d2</span><span class="p">,</span><span class="w"> </span><span class="nv">%d3</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Multiple register variables can also be declared using a range-based syntax, where a
+half-open index range <code class="docutils literal notranslate"><span class="pre">&lt;Start~End&gt;</span></code> is appended to a base name to generate each
+variable name. The range includes the lower bound and excludes the upper bound.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// define multiple 16-bit register variables named %h0, %h1, %h2, %h3, %h4</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="nv">%h</span><span class="p">&lt;</span><span class="mi">0</span><span class="err">~</span><span class="mi">5</span><span class="p">&gt;;</span>
+<span class="c1">// define vector register variables %v4w4, %v4w5, %v4w6, %v4w7</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v4.32b</span><span class="w"> </span><span class="nv">%v4w</span><span class="p">&lt;</span><span class="mi">4</span><span class="err">~</span><span class="mi">8</span><span class="p">&gt;;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Register variables can be declared anywhere inside a function or a kernel.</p>
+</div>
+</section>
+<section id="predicate-variables">
+<span id="anchor-predicate-variables"></span><h2><span class="section-number">2.3. </span>Predicate Variables<a class="headerlink" href="#predicate-variables" title="Link to this heading">#</a></h2>
+<p>Predicate variables reside in register space and hold single-bit values
+produced by comparison instructions. They can control branches and select
+instructions, and serve as carry-in/carry-out bits for integer arithmetic
+overflow detection.</p>
+<p>A predicate declaration follows the same syntax as a <a class="reference internal" href="#anchor-register-variables"><span class="std std-ref">register</span></a>
+variable declaration with the following modifications:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.pred</span></code> is used instead of <code class="docutils literal notranslate"><span class="pre">.reg</span></code>.</p></li>
+<li><p>bitwidth is not specified, as predicates are single-bit values.</p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// define a predicate variable named %p0</span>
+<span class="kd">.pred</span><span class="w"> </span><span class="nv">%p0</span><span class="p">;</span>
+<span class="c1">// define multiple predicate variables named %p1, %p2, %p3</span>
+<span class="kd">.pred</span><span class="w"> </span><span class="nv">%p</span><span class="p">&lt;</span><span class="mi">1</span><span class="err">~</span><span class="mi">4</span><span class="p">&gt;;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Predicate variables can be declared anywhere inside a function or a kernel.</p>
+</div>
+</section>
+<section id="memory-variables">
+<span id="anchor-memory-variables"></span><h2><span class="section-number">2.4. </span>Memory Variables<a class="headerlink" href="#memory-variables" title="Link to this heading">#</a></h2>
+<p>Memory variable declarations define named allocations in one of a memory
+<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">address space</span></a>. The declaration follows
+the following format:</p>
+<ul class="simple">
+<li><p>address space - <code class="docutils literal notranslate"><span class="pre">.global</span></code>, <code class="docutils literal notranslate"><span class="pre">.const</span></code>, <code class="docutils literal notranslate"><span class="pre">.private</span></code>, or <code class="docutils literal notranslate"><span class="pre">.shared</span></code></p></li>
+<li><p>name of the memory variable, starting with <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> followed by an <a class="reference internal" href="syntax.html#anchor-identifiers"><span class="std std-ref">identifier</span></a></p></li>
+<li><p>allocated size in bytes, specified within <code class="docutils literal notranslate"><span class="pre">[]</span></code></p></li>
+</ul>
+<p>A memory variable may be used as a source in <a class="reference internal" href="instructions_data_movement.html#instruction-addrof"><span class="std std-ref">addrof</span></a>
+instruction or in the address expressions of load, store, and atomic instructions.</p>
+<p>The allowed scope depends on the address space: <code class="docutils literal notranslate"><span class="pre">.private</span></code> and <code class="docutils literal notranslate"><span class="pre">.shared</span></code>
+variables must be declared inside a kernel or function, while <code class="docutils literal notranslate"><span class="pre">.global</span></code>
+variables must be declared at module scope. <code class="docutils literal notranslate"><span class="pre">.const</span></code> variables can be
+declared at either module scope or inside a kernel or function.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// define a 8 byte global variable named @G</span>
+<span class="kd">.global</span><span class="w"> </span><span class="nv">@G</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+
+<span class="kd">.kernel</span><span class="w"> </span><span class="nv">@test</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// define a 16 byte shared variable named @S</span>
+<span class="w">   </span><span class="kd">.shared</span><span class="w"> </span><span class="nv">@S</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="kd">.function</span><span class="w"> </span><span class="nf">void</span><span class="w"> </span><span class="nv">@func</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">// define a 1 byte private variable named @P</span>
+<span class="w">   </span><span class="kd">.private</span><span class="w"> </span><span class="nv">@P</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="alignment">
+<span id="anchor-variable-alignment"></span><h3><span class="section-number">2.4.1. </span>Alignment<a class="headerlink" href="#alignment" title="Link to this heading">#</a></h3>
+<p>Memory variables are aligned to byte boundary by default. If greater alignment
+is needed, it can be specified as part of variable declaration using <code class="docutils literal notranslate"><span class="pre">.align</span></code>
+attribute.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// define a private variable @A of 16 bytes, aligned to 4-byte boundary</span>
+<span class="kd">.private</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@A</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Alignment value must be a power of two. Any other alignment results
+in a compile-time error.</p>
+</div>
+</section>
+</section>
+<section id="global-variables">
+<span id="anchor-global-variables"></span><h2><span class="section-number">2.5. </span>Global Variables<a class="headerlink" href="#global-variables" title="Link to this heading">#</a></h2>
+<p>Memory variables declared in module scope (<code class="docutils literal notranslate"><span class="pre">.global</span></code> or <code class="docutils literal notranslate"><span class="pre">.const</span></code> space) are
+considered global variables. Global variables are visible in the entire module. A global
+variable that has no static initializer has an undefined value at kernel entry.</p>
+<section id="initializers">
+<h3><span class="section-number">2.5.1. </span>Initializers<a class="headerlink" href="#initializers" title="Link to this heading">#</a></h3>
+<p>Global variables support an initializer syntax to specify the variable’s initial value.
+Initializer value is specified via comma-separated pairs of size and immediate integer
+values, enclosed within <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">}</span></code>. A floating-point immediate must be converted to
+hexadecimal format to be used in an initializer.</p>
+<p>An immediate value can be specified as a decimal or a hexadecimal (prefixed with <code class="docutils literal notranslate"><span class="pre">0x</span></code> or <code class="docutils literal notranslate"><span class="pre">0X</span></code>).
+Hexadecimal literals are zero-extended, while decimal literals are sign-extended to 64 bits.
+Resulting value is then truncated to the size of the initializer element.</p>
+<ul class="simple">
+<li><p>size of an immediate must be one of <code class="docutils literal notranslate"><span class="pre">.8b</span></code>, <code class="docutils literal notranslate"><span class="pre">.16b</span></code>, <code class="docutils literal notranslate"><span class="pre">.32b</span></code>, or <code class="docutils literal notranslate"><span class="pre">.64b</span></code></p></li>
+<li><p>nested initializer values are not permitted</p></li>
+<li><p>immediate values are stored using little-endian encoding.</p></li>
+</ul>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// 4-byte global variable initialized to 100</span>
+<span class="kd">.global</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@G1</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="p">};</span>
+<span class="c1">// 8-byte constant variable initialized to -1</span>
+<span class="kd">.const</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@G2</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="mi">0</span><span class="nf">xFFFFFFFFFFFFFFFF</span><span class="w"> </span><span class="p">};</span>
+<span class="c1">// 4-byte global variable initialized to single-precision -1.0</span>
+<span class="kd">.global</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@G3</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="mi">0</span><span class="nf">xBF800000</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Number of bytes in initializer must match number of bytes in variable declaration</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Initializer is mandatory for <code class="docutils literal notranslate"><span class="pre">.const</span></code> variables</p>
+</div>
+<section id="zero-initializer">
+<span id="anchor-zero-initializer"></span><h4><span class="section-number">2.5.1.1. </span>Zero-initializer<a class="headerlink" href="#zero-initializer" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">.zero</span> <span class="pre">N</span></code> directive can be used to zero-initialize a global variable,
+where <code class="docutils literal notranslate"><span class="pre">N</span></code> represents the number of zero bytes.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// 4-byte global variable initialized to zero</span>
+<span class="kd">.global</span><span class="w"> </span><span class="nv">@C</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kd">.zero</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">};</span>
+<span class="c1">// 8-byte global variable initialized to alternating 0,-1 values</span>
+<span class="kd">.global</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@D</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="mi">0</span><span class="nf">xFFFF</span><span class="err">,</span><span class="w"> </span><span class="na">.zero</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mf">.16</span><span class="n">b</span><span class="w"> </span><span class="mh">0xFFFF</span><span class="p">,</span><span class="w"> </span><span class="na">.zero</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+<p>is equivalent to</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.global</span><span class="w"> </span><span class="nv">@C</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+<span class="kd">.global</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@D</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="mi">0</span><span class="nf">xFFFF</span><span class="err">,</span><span class="w"> </span><span class="mf">.16</span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">.16</span><span class="n">b</span><span class="w"> </span><span class="mh">0xFFFF</span><span class="p">,</span><span class="w"> </span><span class="mf">.16</span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="symbol-initializer">
+<h4><span class="section-number">2.5.1.2. </span>Symbol-initializer<a class="headerlink" href="#symbol-initializer" title="Link to this heading">#</a></h4>
+<p>Any symbol in module scope, such as functions and global variables, may be used as an
+initializer value. In such cases, the value represents the 64-bit address of the symbol
+in its address space (equivalent to using <a class="reference internal" href="instructions_data_movement.html#instruction-addrof"><span class="std std-ref">addrof</span></a> instruction).
+A constant offset from the symbol address can also be specified using <code class="docutils literal notranslate"><span class="pre">&#64;&lt;symbol&gt;+&lt;offset&gt;</span></code> syntax.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.global</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@D</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="mi">0</span><span class="nf">xFFFF</span><span class="err">,</span><span class="w"> </span><span class="mf">.16</span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">.16</span><span class="n">b</span><span class="w"> </span><span class="mh">0xFFFF</span><span class="p">,</span><span class="w"> </span><span class="mf">.16</span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+<span class="kd">.function</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">@add</span><span class="p">(</span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%a</span><span class="p">,</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="err">...</span>
+<span class="p">}</span>
+
+<span class="c1">// @FAddr is initialized to the address of &#39;add&#39; function</span>
+<span class="kd">.const</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="nv">@FAddr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">@add</span><span class="w"> </span><span class="p">};</span>
+<span class="c1">// @VAddr is initialized to the address of global variable @D</span>
+<span class="kd">.const</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="nv">@VAddr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">@D</span><span class="w"> </span><span class="p">};</span>
+<span class="c1">// @GAddr is initialized to the address of the 3rd element of @D</span>
+<span class="kd">.const</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="nv">@GAddr</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">@D</span><span class="err">+</span><span class="mi">4</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="linkage">
+<span id="anchor-variable-linkage"></span><h3><span class="section-number">2.5.2. </span>Linkage<a class="headerlink" href="#linkage" title="Link to this heading">#</a></h3>
+<p>By default, global variables have internal linkage, meaning that they
+are only visible within the module in which they are defined.</p>
+<p>An <code class="docutils literal notranslate"><span class="pre">.export</span></code> directive is used to indicate external visibility of a
+variable across different modules. Exported variables can be used to
+resolve references to symbols with the same name during linking.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// allow access to variable @A from another module</span>
+<span class="kd">.export</span><span class="w"> </span><span class="kd">.global</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@A</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kd">.zero</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+<p>An <code class="docutils literal notranslate"><span class="pre">.import</span></code> directive is used to indicate that a variable is not defined
+within the current module. Imported variables do not support initializers.</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// import global variable @A from another module</span>
+<span class="kd">.import</span><span class="w"> </span><span class="kd">.global</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">@A</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A variable must not be declared more than once within a module, regardless of its linkage.</p>
+</div>
+</section>
+<section id="attributes">
+<span id="anchor-variable-attributes"></span><h3><span class="section-number">2.5.3. </span>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h3>
+<p>Several optional attributes may be specified for global variables.</p>
+<p><code class="docutils literal notranslate"><span class="pre">.section(&quot;NAME&quot;)</span></code> specifies a name of the section of the object file to place the variable in.</p>
+<blockquote>
+<div><div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// place variable @HI in a section named &quot;.const.data&quot;</span>
+<span class="kd">.const</span><span class="w"> </span><span class="kd">.section</span><span class="p">(</span><span class="err">&quot;</span><span class="kd">.const.data</span><span class="err">&quot;</span><span class="p">)</span><span class="w"> </span><span class="nv">@HI</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">.8b</span><span class="w"> </span><span class="mi">0</span><span class="nf">x48</span><span class="err">,</span><span class="w"> </span><span class="mf">.8</span><span class="n">b</span><span class="w"> </span><span class="mh">0x49</span><span class="p">,</span><span class="w"> </span><span class="mf">.8</span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">.host_access(&quot;NAME&quot;)</span></code> specifies the name used to refer to the variable in the
+<a class="reference external" href="https://github.com/KhronosGroup/SPIRV-Registry/blob/main/extensions/INTEL/SPV_INTEL_global_variable_host_access.asciidoc">Host API</a>.</p>
+<blockquote>
+<div><div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="c1">// export global variable @G as &quot;my_global_var&quot; for host access</span>
+<span class="kd">.global</span><span class="w"> </span><span class="kd">.align</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="kd">.host_access</span><span class="p">(</span><span class="err">&quot;</span><span class="nf">my_global_var</span><span class="err">&quot;)</span><span class="w"> </span><span class="nv">@G</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mf">.32</span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="syntax.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Syntax and Format</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="operands.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Operands</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bitwidth">2.1. Bitwidth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#register-variables">2.2. Register Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predicate-variables">2.3. Predicate Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-variables">2.4. Memory Variables</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alignment">2.4.1. Alignment</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#global-variables">2.5. Global Variables</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#initializers">2.5.1. Initializers</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#zero-initializer">2.5.1.1. Zero-initializer</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#symbol-initializer">2.5.1.2. Symbol-initializer</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linkage">2.5.2. Linkage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">2.5.3. Attributes</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Intel Corporation.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

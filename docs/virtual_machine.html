@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction &#8212; Portable ISA (PISA) Specification v0.1</title>
+    <title>1. Virtual Machine &#8212; Portable ISA (PISA) Specification v0.1</title>
   
   
   
@@ -48,11 +48,11 @@
     <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'virtual_machine';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Architecture Model" href="arch.html" />
-    <link rel="prev" title="Start" href="root.html" />
+    <link rel="next" title="2. Address Spaces and Data Types" href="spaces_types.html" />
+    <link rel="prev" title="Architecture Model" href="arch.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -133,7 +133,7 @@
      
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="index.html">
   
   
   
@@ -163,9 +163,9 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">1. Virtual Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="floating_point.html">3. Floating Point Support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="special_registers.html">4. Special Registers</a></li>
@@ -251,7 +251,7 @@
       
       
       
-      <li><a href="_sources/index.rst" target="_blank"
+      <li><a href="_sources/virtual_machine.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -335,7 +335,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction</h1>
+    <h1>Virtual Machine</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -345,8 +345,18 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-overview">Document Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#execution-model">1.1. Execution Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#order-of-execution">1.1.1. Order of Execution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-model">1.2. Memory Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-consistency">1.2.1. Memory Consistency</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-order">1.2.1.1. Memory Order</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-scope">1.2.1.2. Memory Scope</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -358,57 +368,147 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
-<p>This document specifies portable instruction set architecture (PISA) for Intel GPUs,
-providing a programming model and instruction set for general-purpose parallel programming.</p>
-<section id="goals">
-<h2>Goals<a class="headerlink" href="#goals" title="Link to this heading">#</a></h2>
-<p>The goals of PISA include:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Provide a stable, portable ISA for compilers targeting Intel GPUs</p></li>
-<li><p>Provide “close-to-the-metal” performance comparable to native machine ISA code</p></li>
-<li><p>Facilitate advanced programming support such as hand-written libraries and inline assembly</p></li>
-</ul>
-</div></blockquote>
+  <section id="virtual-machine">
+<span id="anchor-virtual-machine"></span><h1><span class="section-number">1. </span>Virtual Machine<a class="headerlink" href="#virtual-machine" title="Link to this heading">#</a></h1>
+<p>The PISA virtual machine is an execution environment that dictates
+how PISA kernels are structured, launched, and run, largely following the
+<a class="reference external" href="https://registry.khronos.org/OpenCL/specs/3.0-unified/html/OpenCL_API.html#_execution_model">OpenCL 3.0</a>
+execution model.</p>
+<section id="execution-model">
+<h2><span class="section-number">1.1. </span>Execution Model<a class="headerlink" href="#execution-model" title="Link to this heading">#</a></h2>
+<p>A PISA kernel is a sequence of instructions that executes on the PISA
+virtual machine. When the host program submits a kernel for execution,
+the PISA virtual machine creates an N-Dimensional Range (NDRange) of <code class="docutils literal notranslate"><span class="pre">work-items</span></code>,
+and an instance of the kernel is created for each element in the NDRange.
+In addition to the total number of work-items (<strong>global size</strong>), the host
+program may also specify how many work-items to group together into <code class="docutils literal notranslate"><span class="pre">work-groups</span></code>
+(<strong>local size</strong>). Work-items in the same work-group can communicate
+through objects in the shared memory, and they can synchronize through
+the barrier instructions. During execution, each work-group is further
+divided by the virtual machine into one or more <code class="docutils literal notranslate"><span class="pre">sub-groups</span></code>, and
+work-items within a sub-group can communicate and synchronize through
+shuffle, reduce, and barrier instructions. A value or variable is
+considered <strong>sub-group-uniform</strong> if it is guaranteed to have the same
+value across all active work-items within a sub-group.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="special_registers.html#anchor-special-registers"><span class="std std-ref">Special registers</span></a> can be used to query
+the sub-group, local, and global sizes, as well as work-item IDs.</p>
+</div>
+<section id="order-of-execution">
+<h3><span class="section-number">1.1.1. </span>Order of Execution<a class="headerlink" href="#order-of-execution" title="Link to this heading">#</a></h3>
+<p>The PISA virtual machine executes work-groups concurrently but not
+necessarily in parallel, and their execution order is unspecified. Work-items
+in the same work-group execute as members of the same work-group instance and
+may synchronize and communicate through work-group-level mechanisms, but the
+virtual machine does not require any particular issue order among them.
+Sub-groups within the same work-group maintain independent forward progress with
+respect to each other. In other words, unless one sub-group depends on
+another sub-group, for example by waiting at a work-group barrier, its
+execution must not be blocked by that other sub-group.</p>
 </section>
-<section id="document-overview">
-<h2>Document Overview<a class="headerlink" href="#document-overview" title="Link to this heading">#</a></h2>
-<p>This document is organized as follows:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Architecture Model</p>
-<ul>
-<li><p><a class="reference internal" href="virtual_machine.html"><span class="doc">Virtual Machine</span></a> — OpenCL 3.0–based execution and memory model.</p></li>
-<li><p><a class="reference internal" href="spaces_types.html"><span class="doc">Address Spaces and Types</span></a> — address spaces and data types.</p></li>
-<li><p><a class="reference internal" href="floating_point.html"><span class="doc">Floating Point</span></a> — floating-point data types and semantics.</p></li>
-<li><p><a class="reference internal" href="special_registers.html"><span class="doc">Special Registers</span></a> — access to execution context.</p></li>
+</section>
+<section id="memory-model">
+<h2><span class="section-number">1.2. </span>Memory Model<a class="headerlink" href="#memory-model" title="Link to this heading">#</a></h2>
+<p>PISA memory objects may be stored in one of the supported
+<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">address spaces</span></a>.</p>
+<ul class="simple">
+<li><p>global memory (visible to all work-items)</p></li>
+<li><p>constant memory (visible to all work-items)</p></li>
+<li><p>shared local memory (visible to work-items in the same work-group)</p></li>
+<li><p>private memory (visible to this work-item only)</p></li>
+<li><p>parameter memory (kernel arguments, visible to all work-items)</p></li>
 </ul>
-</li>
-<li><p>Programming Interface</p>
-<ul>
-<li><p><a class="reference internal" href="syntax.html"><span class="doc">Assembly Syntax</span></a> — format and program structure of PISA assembly.</p></li>
-<li><p><a class="reference internal" href="variables.html"><span class="doc">Variables</span></a> — variable declarations, linkage, and initializers.</p></li>
-<li><p><a class="reference internal" href="operands.html"><span class="doc">Operands and Addressing</span></a> — operand types and usage patterns.</p></li>
-<li><p><a class="reference internal" href="calling_convention.html"><span class="doc">Calling Convention</span></a> — declaring and invoking kernels and functions.</p></li>
-<li><p><a class="reference internal" href="memory_access.html"><span class="doc">Memory Access</span></a> — memory access restrictions and semantics.</p></li>
-<li><p><a class="reference internal" href="compatibility.html"><span class="doc">Compatibility</span></a> — versioning and backward-compatibility guarantees.</p></li>
-</ul>
-</li>
-<li><p>Instruction Reference</p>
-<ul>
-<li><p><a class="reference internal" href="instruction_set.html"><span class="doc">Instruction Set</span></a> — description of core instructions.</p></li>
-</ul>
-</li>
-<li><p>Appendix</p>
-<ul>
-<li><p><a class="reference internal" href="directives.html"><span class="doc">Index of PISA directives</span></a></p></li>
-<li><p><a class="reference internal" href="notices.html"><span class="doc">Legal Notices and Disclaimers</span></a></p></li>
-</ul>
-</li>
-</ul>
-</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All address spaces, except for register and parameter, follow the
+<a class="reference external" href="https://registry.khronos.org/OpenCL/specs/3.0-unified/html/OpenCL_API.html#_fundamental_memory_regions">OpenCL</a>
+definitions.</p>
+</div>
+<section id="memory-consistency">
+<span id="anchor-memory-consistency-model"></span><h3><span class="section-number">1.2.1. </span>Memory Consistency<a class="headerlink" href="#memory-consistency" title="Link to this heading">#</a></h3>
+<p>The PISA memory consistency model follows the C++ memory model and extends it
+with explicit memory scopes. Memory accesses may be non-atomic (<code class="docutils literal notranslate"><span class="pre">weak</span></code>) or
+atomic with a memory order. <code class="docutils literal notranslate"><span class="pre">weak</span></code> accesses provide no ordering or atomicity
+guarantees. <code class="docutils literal notranslate"><span class="pre">relaxed</span></code> atomic accesses impose no ordering constraints;
+stronger orders establish happens-before relationships across work-items.</p>
+<section id="memory-order">
+<span id="anchor-memory-order"></span><h4><span class="section-number">1.2.1.1. </span>Memory Order<a class="headerlink" href="#memory-order" title="Link to this heading">#</a></h4>
+<p>Atomic memory instructions carry a memory order that establishes happens-before
+relationships across work-items. Memory order can also be combined with a scope on a
+<a class="reference internal" href="instructions_synchronization.html#instruction-fence"><span class="std std-ref">fence</span></a> instruction to order relaxed memory operations.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">weak</span></code> is not a memory order. It marks a non-atomic access with no atomicity or
+ordering guarantees. Use <code class="docutils literal notranslate"><span class="pre">relaxed</span></code> or a stronger order for atomic accesses.</p>
+</div>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id1">
+<caption><span class="caption-text"><strong>Memory Order Specifiers</strong></span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>PISA Memory Order</p></th>
+<th class="head"><p>C++ equivalent</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>relaxed</p></td>
+<td><p>memory_order_relaxed</p></td>
+</tr>
+<tr class="row-odd"><td><p>acquire</p></td>
+<td><p>memory_order_acquire</p></td>
+</tr>
+<tr class="row-even"><td><p>release</p></td>
+<td><p>memory_order_release</p></td>
+</tr>
+<tr class="row-odd"><td><p>acq_rel</p></td>
+<td><p>memory_order_acq_rel</p></td>
+</tr>
+<tr class="row-even"><td><p>seq_cst</p></td>
+<td><p>memory_order_seq_cst</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Memory order may only be specified on access to global or shared memory objects.</p>
+</div>
+</section>
+<section id="memory-scope">
+<span id="anchor-memory-scope"></span><h4><span class="section-number">1.2.1.2. </span>Memory Scope<a class="headerlink" href="#memory-scope" title="Link to this heading">#</a></h4>
+<p>Memory scope specifies the set of work-items in which a <a class="reference internal" href="instructions_memory.html#anchor-memory-instructions"><span class="std std-ref">memory instruction</span></a>
+can directly synchronize. A memory scope must be specified when the memory order is
+stronger than <code class="docutils literal notranslate"><span class="pre">relaxed</span></code> (i.e., <code class="docutils literal notranslate"><span class="pre">acquire</span></code>, <code class="docutils literal notranslate"><span class="pre">release</span></code>, <code class="docutils literal notranslate"><span class="pre">acq_rel</span></code>, or <code class="docutils literal notranslate"><span class="pre">seq_cst</span></code>).
+It can also be combined with a <a class="reference internal" href="instructions_synchronization.html#instruction-fence"><span class="std std-ref">fence</span></a> instruction to establish
+ordering of relaxed memory accesses across the work-items in the specified scope.</p>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id2">
+<caption><span class="caption-text"><strong>Memory Scope Specifiers</strong></span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>PISA Memory Scope</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">subgroup</span></code></p></td>
+<td><p>All work-items in the same sub-group</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">workgroup</span></code></p></td>
+<td><p>All work-items in the same work-group</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gpu</span></code></p></td>
+<td><p>All work-items in the global NDRange</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">system</span></code></p></td>
+<td><p>All work-items in the global NDRange and the host program</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Memory scope may only be specified on access to global or shared memory objects.</p>
+</div>
+</section>
+</section>
 </section>
 </section>
 
@@ -424,20 +524,20 @@ providing a programming model and instruction set for general-purpose parallel p
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="root.html"
+       href="arch.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Start</p>
+        <p class="prev-next-title">Architecture Model</p>
       </div>
     </a>
     <a class="right-next"
-       href="arch.html"
+       href="spaces_types.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Architecture Model</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Address Spaces and Data Types</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -457,8 +557,18 @@ providing a programming model and instruction set for general-purpose parallel p
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-overview">Document Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#execution-model">1.1. Execution Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#order-of-execution">1.1.1. Order of Execution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-model">1.2. Memory Model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-consistency">1.2.1. Memory Consistency</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-order">1.2.1.1. Memory Order</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-scope">1.2.1.2. Memory Scope</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

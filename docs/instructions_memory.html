@@ -1,0 +1,1077 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>8. Memory and Atomics &#8212; Portable ISA (PISA) Specification v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = '';</script>
+    <script>let toggleHintHide = '';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'instructions_memory';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="9. Synchronization" href="instructions_synchronization.html" />
+    <link rel="prev" title="7. Sub-group Communication" href="instructions_cross_lane.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Portable ISA (PISA) Specification v0.1</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="floating_point.html">3. Floating Point Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="special_registers.html">4. Special Registers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="prog.html">Programming Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">1. Syntax and Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">2. Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operands.html">3. Operands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calling_convention.html">4. Calling Convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory_access.html">5. Memory Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compatibility.html">6. Compatibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="instruction_set.html">Instruction Set</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="instructions_arithmetic.html">1. Integer Arithmetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_floating_point.html">2. Floating Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_logical.html">3. Logic and Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_data_movement.html">4. Data Movement and Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_comparison.html">5. Comparison and Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_control_flow.html">6. Control Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_cross_lane.html">7. Sub-group Communication</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">8. Memory and Atomics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_synchronization.html">9. Synchronization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="appendix.html">Appendix</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="directives.html">1. Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notices.html">2. Notices</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/instructions_memory.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Memory and Atomics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fatom">8.1. <code class="docutils literal notranslate"><span class="pre">fatom</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iatom">8.2. <code class="docutils literal notranslate"><span class="pre">iatom</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ld">8.3. <code class="docutils literal notranslate"><span class="pre">ld</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ld-param">8.4. <code class="docutils literal notranslate"><span class="pre">ld.param</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#st">8.5. <code class="docutils literal notranslate"><span class="pre">st</span></code></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="memory-and-atomics">
+<h1><span class="section-number">8. </span>Memory and Atomics<a class="headerlink" href="#memory-and-atomics" title="Link to this heading">#</a></h1>
+<section id="fatom">
+<span id="anchor-memory-instructions"></span><h2><span class="section-number">8.1. </span><code class="docutils literal notranslate"><span class="pre">fatom</span></code><a class="headerlink" href="#fatom" title="Link to this heading">#</a></h2>
+<p id="instruction-fatom">Perform a floating-point atomic operation.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">fatom.<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">addrspace</span></a>&lt;<a class="reference internal" href="virtual_machine.html#anchor-memory-order"><span class="std std-ref">.memorder</span></a>&gt;&lt;<a class="reference internal" href="virtual_machine.html#anchor-memory-scope"><span class="std std-ref">.memscope</span></a>&gt;&lt;<a class="reference internal" href="memory_access.html#anchor-atomic-cache-control"><span class="std std-ref">.cc</span></a>&gt;.op.<a class="reference internal" href="floating_point.html#anchor-fp-type"><span class="std std-ref">type</span></a> dst, [<a class="reference internal" href="operands.html#anchor-address-operands"><span class="std std-ref">addr</span></a>], src0 &lt;, src1&gt;
+
+  .addrspace = { .global, .generic, .shared }
+  .memorder = { <span class="bold-underlined-text">.relaxed</span>, .release, .acquire, .acq_rel }
+  .memscope = { .workgroup, <span class="bold-underlined-text">.gpu</span>, .system }
+  .cc = { .uc, .L2wb, .L3wb }
+  .op = { .add, .sub, .min, .max, .cas }
+  .type = { .bf, .hf, .f, .df }
+
+
+  - addr is an address operand, in the form <code class="docutils literal notranslate"><span class="pre">MemRR</span></code> or <code class="docutils literal notranslate"><span class="pre">MemRI</span></code>
+  - dst, src0, src1 are registers</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>operand <code class="docutils literal notranslate"><span class="pre">src1</span></code> is defined only when qualifier <code class="docutils literal notranslate"><span class="pre">.op</span></code> is <code class="docutils literal notranslate"><span class="pre">.cas</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.cc</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.shared</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.memscope</span></code> can be specified only when qualifier <code class="docutils literal notranslate"><span class="pre">.memorder</span></code> != <code class="docutils literal notranslate"><span class="pre">.relaxed</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.df</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.global</span></code> and qualifier <code class="docutils literal notranslate"><span class="pre">.op</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.add</span></code>, <code class="docutils literal notranslate"><span class="pre">.sub</span></code>]</p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">atomic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">addr</span>
+<span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">cas</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">old</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">old</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">add</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src0</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">sub</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">src0</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">min</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fmin</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">max</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fmax</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="o">*</span><span class="n">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span>
+<span class="w">  </span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<ul class="simple">
+<li><p>memory <a class="reference internal" href="memory_access.html#anchor-memory-access-alignment"><span class="std std-ref">access</span></a> requirements must be observed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.generic</span></code> address must point to either <code class="docutils literal notranslate"><span class="pre">.global</span></code> or <code class="docutils literal notranslate"><span class="pre">.shared</span></code> <a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">address space</span></a>.</p></li>
+<li><p><a class="reference internal" href="memory_access.html#anchor-atomic-cache-control"><span class="std std-ref">atomic cache controls</span></a> may be utilized.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id1">
+<caption><span class="caption-text"><strong>Supported combinations for floating-point atomic operations</strong></span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">.addrspace</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">.op</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">.type</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.global</p></td>
+<td><p>.min, .max, .cas</p></td>
+<td><p>.hf, .bf, .f</p></td>
+</tr>
+<tr class="row-odd"><td><p>.global</p></td>
+<td><p>.add, .sub</p></td>
+<td><p>.hf, .bf, .f, .df</p></td>
+</tr>
+<tr class="row-even"><td><p>.shared</p></td>
+<td><p>.min, .max, .cas, .add, .sub</p></td>
+<td><p>.hf, .bf, .f</p></td>
+</tr>
+<tr class="row-odd"><td><p>.generic</p></td>
+<td><p>.min, .max, .cas, .add, .sub</p></td>
+<td><p>.hf, .bf, .f</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%addr</span><span class="p">;</span>
+
+<span class="c1">// atomic addition of single-precision floating point and memory value</span>
+<span class="nf">fatom.shared.add.f</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%addr</span><span class="p">],</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="iatom">
+<h2><span class="section-number">8.2. </span><code class="docutils literal notranslate"><span class="pre">iatom</span></code><a class="headerlink" href="#iatom" title="Link to this heading">#</a></h2>
+<p id="instruction-iatom">Perform an integer atomic operation.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">iatom.<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">addrspace</span></a>&lt;<a class="reference internal" href="virtual_machine.html#anchor-memory-order"><span class="std std-ref">.memorder</span></a>&gt;&lt;<a class="reference internal" href="virtual_machine.html#anchor-memory-scope"><span class="std std-ref">.memscope</span></a>&gt;&lt;<a class="reference internal" href="memory_access.html#anchor-atomic-cache-control"><span class="std std-ref">.cc</span></a>&gt;.op.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, [<a class="reference internal" href="operands.html#anchor-address-operands"><span class="std std-ref">addr</span></a>] &lt;, src0&gt; &lt;, src1&gt;
+
+  .addrspace = { .global, .shared, .generic }
+  .memorder = { <span class="bold-underlined-text">.relaxed</span>, .release, .acquire, .acq_rel }
+  .memscope = { .workgroup, <span class="bold-underlined-text">.gpu</span>, .system }
+  .cc = { .uc, .L2wb, .L3wb }
+  .op = { .add, .sub, .smin, .smax, .umin, .umax, .and, .or, .xor, .xchg, .cas, .inc,
+          .dec, .incwrap, .decwrap }
+  .type = { .16b, .32b, .64b, .128b }
+
+
+  - addr is an address operand, in the form <code class="docutils literal notranslate"><span class="pre">MemRR</span></code> or <code class="docutils literal notranslate"><span class="pre">MemRI</span></code>
+  - dst, src0, src1 are registers</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>operand <code class="docutils literal notranslate"><span class="pre">src0</span></code> is not defined when qualifier <code class="docutils literal notranslate"><span class="pre">.op</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.inc</span></code>, <code class="docutils literal notranslate"><span class="pre">.dec</span></code>]</p></li>
+<li><p>operand <code class="docutils literal notranslate"><span class="pre">src1</span></code> is defined only when qualifier <code class="docutils literal notranslate"><span class="pre">.op</span></code> is <code class="docutils literal notranslate"><span class="pre">.cas</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.16b</span></code> when qualifier <code class="docutils literal notranslate"><span class="pre">.op</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.incwrap</span></code>, <code class="docutils literal notranslate"><span class="pre">.decwrap</span></code>]</p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.128b</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.op</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.xchg</span></code>, <code class="docutils literal notranslate"><span class="pre">.cas</span></code>]</p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.64b</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.op</span></code> is <code class="docutils literal notranslate"><span class="pre">.cas</span></code> or qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.global</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.cc</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.shared</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.memscope</span></code> can be specified only when qualifier <code class="docutils literal notranslate"><span class="pre">.memorder</span></code> != <code class="docutils literal notranslate"><span class="pre">.relaxed</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">atomic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">addr</span>
+<span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">cas</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">old</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">old</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">add</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src0</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">sub</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">src0</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">inc</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">dec</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">incwrap</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">old</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">old</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// unsigned</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">decwrap</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">old</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">old</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src0</span><span class="p">))</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">old</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// unsigned</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">smin</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">smin</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">smax</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">smax</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">umin</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">umin</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">umax</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">umax</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="n">src0</span><span class="p">)</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">and</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">src0</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">or</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">src0</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">xor</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">src0</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">xchg</span><span class="p">:</span>
+<span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span>
+<span class="w">      </span><span class="k">break</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="o">*</span><span class="n">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span>
+<span class="w">  </span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<ul class="simple">
+<li><p>memory <a class="reference internal" href="memory_access.html#anchor-memory-access-alignment"><span class="std std-ref">access</span></a> requirements must be observed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.generic</span></code> address must point to either <code class="docutils literal notranslate"><span class="pre">.global</span></code> or <code class="docutils literal notranslate"><span class="pre">.shared</span></code> <a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">address space</span></a>.</p></li>
+<li><p><a class="reference internal" href="memory_access.html#anchor-atomic-cache-control"><span class="std std-ref">atomic cache controls</span></a> may be utilized.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id2">
+<caption><span class="caption-text"><strong>Supported combinations for integer atomic operations</strong></span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">.addrspace</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">.op</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">.type</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.global</p></td>
+<td><p>.add, .sub, .smin, .smax, .umin, .umax, .and, .or, .xor, .xchg, .cas, .inc, .dec</p></td>
+<td><p>.16b, .32b, .64b</p></td>
+</tr>
+<tr class="row-odd"><td><p>.global</p></td>
+<td><p>.incwrap, .decwrap</p></td>
+<td><p>.32b, .64b</p></td>
+</tr>
+<tr class="row-even"><td><p>.shared, .generic</p></td>
+<td><p>.add, .sub, .smin, .smax, .umin, .umax, .and, .or, .xor, .xchg, .inc, .dec</p></td>
+<td><p>.16b, .32b</p></td>
+</tr>
+<tr class="row-odd"><td><p>.shared, .generic</p></td>
+<td><p>.cas</p></td>
+<td><p>.16b, .32b, .64b</p></td>
+</tr>
+<tr class="row-even"><td><p>.shared, .generic</p></td>
+<td><p>.incwrap, .decwrap</p></td>
+<td><p>.32b</p></td>
+</tr>
+<tr class="row-odd"><td><p>.global, .shared, .generic</p></td>
+<td><p>.cas, .xchg</p></td>
+<td><p>.128b</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%addr</span><span class="p">;</span>
+
+<span class="c1">// atomic addition of 32-bit integer and memory value</span>
+<span class="nf">iatom.shared.add.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%addr</span><span class="p">],</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="ld">
+<h2><span class="section-number">8.3. </span><code class="docutils literal notranslate"><span class="pre">ld</span></code><a class="headerlink" href="#ld" title="Link to this heading">#</a></h2>
+<p id="instruction-ld">Load data from memory.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Load data from memory (non-atomic):</p>
+<pre class="syntax-literal literal-block">ld&lt;<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">.addrspace</span></a>&gt;&lt;<a class="reference internal" href="virtual_machine.html#anchor-memory-order"><span class="std std-ref">.memorder</span></a>&gt;&lt;<a class="reference internal" href="#anchor-load-cache-control"><span class="std std-ref">.cc</span></a>&gt;&lt;.vec&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, [<a class="reference internal" href="operands.html#anchor-address-operands"><span class="std std-ref">addr</span></a>]
+
+  .addrspace = { .global, <span class="bold-underlined-text">.generic</span>, .shared, .private, .const }
+  .memorder = { <span class="bold-underlined-text">.weak</span> }
+  .cc = { .L1uc.L2uc.L3uc, .L1uc.L2uc.L3c, .L1uc.L2c.L3uc, .L1uc.L2c.L3c,
+          .L1c.L2uc.L3uc, .L1c.L2uc.L3c, .L1c.L2c.L3uc, .L1c.L2c.L3c,
+          .L1s.L2uc.L3uc, .L1s.L2uc.L3c, .L1s.L2c.L3uc, .L1s.L2c.L3c,
+          .ri }
+  .vec = { .v2, .v3, .v4, .v8 }
+  .type = { .8b, .16b, .32b, .64b }
+
+
+  - addr is an address operand, in the form <code class="docutils literal notranslate"><span class="pre">MemRR</span></code> or <code class="docutils literal notranslate"><span class="pre">MemRI</span></code>
+  - dst is a register</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>number of elements of <code class="docutils literal notranslate"><span class="pre">dst</span></code> must match value of <code class="docutils literal notranslate"><span class="pre">.vec</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.vec</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.v3</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.32b</span></code>, <code class="docutils literal notranslate"><span class="pre">.64b</span></code>]</p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.vec</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.v8</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> is <code class="docutils literal notranslate"><span class="pre">.32b</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.cc</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.shared</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.memorder</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.private</span></code>, <code class="docutils literal notranslate"><span class="pre">.const</span></code>]</p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Load data from memory (atomic):</p>
+<pre class="syntax-literal literal-block">ld&lt;<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">.addrspace</span></a>&gt;<a class="reference internal" href="virtual_machine.html#anchor-memory-order"><span class="std std-ref">.memorder</span></a>&lt;<a class="reference internal" href="virtual_machine.html#anchor-memory-scope"><span class="std std-ref">.memscope</span></a>&gt;&lt;<a class="reference internal" href="memory_access.html#anchor-atomic-cache-control"><span class="std std-ref">.cc</span></a>&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, [<a class="reference internal" href="operands.html#anchor-address-operands"><span class="std std-ref">addr</span></a>]
+
+  .addrspace = { .global, <span class="bold-underlined-text">.generic</span>, .shared }
+  .memorder = { .relaxed, .acquire, .seq_cst }
+  .memscope = { .workgroup, <span class="bold-underlined-text">.gpu</span>, .system }
+  .cc = { .uc, .L2wb, .L3wb }
+  .type = { .16b, .32b, .64b, .128b }
+
+
+  - addr is an address operand, in the form <code class="docutils literal notranslate"><span class="pre">MemRR</span></code> or <code class="docutils literal notranslate"><span class="pre">MemRI</span></code>
+  - dst is a register</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.cc</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.shared</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.memscope</span></code> can be specified only when qualifier <code class="docutils literal notranslate"><span class="pre">.memorder</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.acquire</span></code>, <code class="docutils literal notranslate"><span class="pre">.seq_cst</span></code>]</p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.64b</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.global</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">scalar load</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">addr</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">vector load</span><a class="headerlink" href="#id4" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">element_count</span><span class="p">(.</span><span class="n">vec</span><span class="p">);</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">   </span><span class="n">dst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">addr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(.</span><span class="n">type</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<ul class="simple">
+<li><p>memory <a class="reference internal" href="memory_access.html#anchor-memory-access-alignment"><span class="std std-ref">access</span></a> requirements must be observed.</p></li>
+<li><p>memory <a class="reference internal" href="memory_access.html#anchor-memory-data-size"><span class="std std-ref">data size</span></a> restrictions must be observed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.generic</span></code> address in atomic load must point to either <code class="docutils literal notranslate"><span class="pre">.global</span></code> or <code class="docutils literal notranslate"><span class="pre">.shared</span></code> <a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">address space</span></a>.</p></li>
+<li><p>atomic load may utilize <a class="reference internal" href="memory_access.html#anchor-atomic-cache-control"><span class="std std-ref">atomic cache controls</span></a>.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><span id="anchor-load-cache-control"></span><table class="table table-center" id="id5">
+<caption><span class="caption-text"><strong>Cache control definitions for non-atomic load instruction</strong></span><a class="headerlink" href="#id5" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Cache control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.L1c</p></td>
+<td><p>Cache the data in L1.</p></td>
+</tr>
+<tr class="row-odd"><td><p>.L1uc</p></td>
+<td><p>Do not cache the data in L1.</p></td>
+</tr>
+<tr class="row-even"><td><p>.L1s</p></td>
+<td><p>Cache the data in L1, but make it more likely to be invalidated later.</p></td>
+</tr>
+<tr class="row-odd"><td><p>.L2c</p></td>
+<td><p>Cache the data in L2.</p></td>
+</tr>
+<tr class="row-even"><td><p>.L2uc</p></td>
+<td><p>Do not cache the data in L2.</p></td>
+</tr>
+<tr class="row-odd"><td><p>.L3c</p></td>
+<td><p>Cache the data in L3.</p></td>
+</tr>
+<tr class="row-even"><td><p>.L3uc</p></td>
+<td><p>Do not cache the data in L3.</p></td>
+</tr>
+<tr class="row-odd"><td><p>.ri</p></td>
+<td><p>Read-invalidate (e.g. last-use) on all levels of cache.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="nv">%r</span><span class="p">,</span><span class="w"> </span><span class="nv">%b</span><span class="p">;</span>
+<span class="kd">.shared</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="nv">@S</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%a</span><span class="p">,</span><span class="w"> </span><span class="nv">%g</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v4.32b</span><span class="w"> </span><span class="nv">%v</span><span class="p">;</span>
+
+<span class="c1">// load a 16-bit element into register %r from shared variable @S</span>
+<span class="c1">// and cache it in all levels</span>
+<span class="nf">ld.shared.L1c.L2c.L3c.16b</span><span class="w"> </span><span class="nv">%r</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">@S</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">%b</span><span class="p">];</span>
+
+<span class="c1">// load a 32-bit vector of 4 elements into vector %v from global memory</span>
+<span class="nf">ld.global.v4.32b</span><span class="w"> </span><span class="nv">%v</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%g</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">16</span><span class="p">];</span>
+
+<span class="c1">// load a 64-bit element into register %a from generic address</span>
+<span class="c1">// considering acquire memory ordering</span>
+<span class="nf">ld.generic.acquire.64b</span><span class="w"> </span><span class="nv">%a</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%g</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="ld-param">
+<h2><span class="section-number">8.4. </span><code class="docutils literal notranslate"><span class="pre">ld.param</span></code><a class="headerlink" href="#ld-param" title="Link to this heading">#</a></h2>
+<p id="instruction-ld-param">Load data from kernel parameter.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">ld.param&lt;.vec&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, [vaddr]
+
+  .vec = { .v2, .v3, .v4, .v8 }
+  .type = { .8b, .16b, .32b, .64b }
+
+
+  - dst is a register</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>number of elements of <code class="docutils literal notranslate"><span class="pre">dst</span></code> must match value of <code class="docutils literal notranslate"><span class="pre">.vec</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.vec</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.v3</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.32b</span></code>, <code class="docutils literal notranslate"><span class="pre">.64b</span></code>]</p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.vec</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.v8</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> is <code class="docutils literal notranslate"><span class="pre">.32b</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<p><code class="docutils literal notranslate"><span class="pre">ld.param</span></code> supports the following address syntax:</p>
+<ul class="simple">
+<li><p>[&#64;var] - references a kernel argument</p></li>
+<li><p>[&#64;var + %reg] - references a kernel argument with a signed 32-bit offset specified by a 32-bit register</p></li>
+<li><p>[&#64;var + imm] - references a kernel argument with a signed 32-bit offset specified by an immediate</p></li>
+</ul>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.kernel</span><span class="w"> </span><span class="nv">@foo</span><span class="p">(</span><span class="kd">.param</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="nv">%arg0</span><span class="p">,</span><span class="w"> </span><span class="kd">.param</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="nv">%arg1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%larg0</span><span class="p">,</span><span class="w"> </span><span class="nv">%larg1</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// load contents of %arg0</span>
+<span class="w">  </span><span class="nf">ld.param.32b</span><span class="w"> </span><span class="nv">%larg0</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%arg0</span><span class="p">];</span>
+<span class="w">  </span><span class="c1">// load contents of %arg1[4]</span>
+<span class="w">  </span><span class="nf">ld.param.32b</span><span class="w"> </span><span class="nv">%larg1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nv">%arg1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="st">
+<h2><span class="section-number">8.5. </span><code class="docutils literal notranslate"><span class="pre">st</span></code><a class="headerlink" href="#st" title="Link to this heading">#</a></h2>
+<p id="instruction-st">Store data to memory.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Store data to memory (non-atomic):</p>
+<pre class="syntax-literal literal-block">st&lt;<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">.addrspace</span></a>&gt;&lt;<a class="reference internal" href="virtual_machine.html#anchor-memory-order"><span class="std std-ref">.memorder</span></a>&gt;&lt;.cc&gt;&lt;.vec&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a>  [<a class="reference internal" href="operands.html#anchor-address-operands"><span class="std std-ref">addr</span></a>], src0
+
+  .addrspace = { .global, <span class="bold-underlined-text">.generic</span>, .shared, .private }
+  .memorder = { <span class="bold-underlined-text">.weak</span> }
+  .cc = { .L1uc.L2uc.L3uc, .L1uc.L2uc.L3wb, .L1uc.L2wb.L3uc, .L1uc.L2wb.L3wb,
+          .L1wt.L2uc.L3uc, .L1wt.L2uc.L3wb, .L1wt.L2wb.L3uc, .L1wt.L2wb.L3wb,
+          .L1s.L2uc.L3uc, .L1s.L2uc.L3wb, .L1s.L2wb.L3uc, .L1wb.L2uc.L3uc,
+          .L1wb.L2wb.L3uc, .L1wb.L2uc.L3wb }
+  .vec = { .v2, .v3, .v4, .v8 }
+  .type = { .8b, .16b, .32b, .64b }
+
+
+  - addr is an address operand, in the form <code class="docutils literal notranslate"><span class="pre">MemRR</span></code> or <code class="docutils literal notranslate"><span class="pre">MemRI</span></code>
+  - src0 is a register</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">src0</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>number of elements of <code class="docutils literal notranslate"><span class="pre">src0</span></code> must match value of <code class="docutils literal notranslate"><span class="pre">.vec</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.vec</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.v3</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.32b</span></code>, <code class="docutils literal notranslate"><span class="pre">.64b</span></code>]</p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.vec</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.v8</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> is <code class="docutils literal notranslate"><span class="pre">.32b</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.cc</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.shared</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.memorder</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.private</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Store data to memory (atomic):</p>
+<pre class="syntax-literal literal-block">st&lt;<a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">.addrspace</span></a>&gt;<a class="reference internal" href="virtual_machine.html#anchor-memory-order"><span class="std std-ref">.memorder</span></a>&lt;<a class="reference internal" href="virtual_machine.html#anchor-memory-scope"><span class="std std-ref">.memscope</span></a>&gt;&lt;<a class="reference internal" href="memory_access.html#anchor-atomic-cache-control"><span class="std std-ref">.cc</span></a>&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a>  [<a class="reference internal" href="operands.html#anchor-address-operands"><span class="std std-ref">addr</span></a>], src0
+
+  .addrspace = { .global, <span class="bold-underlined-text">.generic</span>, .shared }
+  .memorder = { .relaxed, .release, .seq_cst }
+  .memscope = { .workgroup, <span class="bold-underlined-text">.gpu</span>, .system }
+  .cc = { .uc, .L2wb, .L3wb }
+  .type = { .16b, .32b, .64b, .128b }
+
+
+  - addr is an address operand, in the form <code class="docutils literal notranslate"><span class="pre">MemRR</span></code> or <code class="docutils literal notranslate"><span class="pre">MemRI</span></code>
+  - src0 is a register</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">src0</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.cc</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.shared</span></code></p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.memscope</span></code> can be specified only when qualifier <code class="docutils literal notranslate"><span class="pre">.memorder</span></code> is one of [<code class="docutils literal notranslate"><span class="pre">.release</span></code>, <code class="docutils literal notranslate"><span class="pre">.seq_cst</span></code>]</p></li>
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.type</span></code> cannot be <code class="docutils literal notranslate"><span class="pre">.64b</span></code> unless qualifier <code class="docutils literal notranslate"><span class="pre">.addrspace</span></code> is <code class="docutils literal notranslate"><span class="pre">.global</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">scalar store</span><a class="headerlink" href="#id6" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">*</span><span class="n">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">vector store</span><a class="headerlink" href="#id7" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">element_count</span><span class="p">(.</span><span class="n">vec</span><span class="p">);</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">   </span><span class="o">*</span><span class="p">(</span><span class="n">addr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(.</span><span class="n">type</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<ul class="simple">
+<li><p>memory <a class="reference internal" href="memory_access.html#anchor-memory-access-alignment"><span class="std std-ref">access</span></a> requirements must be observed.</p></li>
+<li><p>memory <a class="reference internal" href="memory_access.html#anchor-memory-data-size"><span class="std std-ref">data size</span></a> restrictions must be observed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.generic</span></code> address in atomic store must point to either <code class="docutils literal notranslate"><span class="pre">.global</span></code> or <code class="docutils literal notranslate"><span class="pre">.shared</span></code> <a class="reference internal" href="spaces_types.html#anchor-address-spaces"><span class="std std-ref">address space</span></a>.</p></li>
+<li><p>atomic store may utilize <a class="reference internal" href="memory_access.html#anchor-atomic-cache-control"><span class="std std-ref">atomic cache controls</span></a>.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><span id="anchor-store-cache-control"></span><table class="table table-center" id="id8">
+<caption><span class="caption-text"><strong>Cache control definitions for non-atomic store instruction</strong></span><a class="headerlink" href="#id8" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Cache control</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.L1uc</p></td>
+<td><p>Bypass L1 and write directly to the next level cache.</p></td>
+</tr>
+<tr class="row-odd"><td><p>.L1wb</p></td>
+<td><p>Write data to L1 but not the next level cache.</p></td>
+</tr>
+<tr class="row-even"><td><p>.L1wt</p></td>
+<td><p>Write data to both L1 and the next level cache.</p></td>
+</tr>
+<tr class="row-odd"><td><p>.L1s</p></td>
+<td><p>Streaming write to L1.</p></td>
+</tr>
+<tr class="row-even"><td><p>.L2uc</p></td>
+<td><p>Bypass L2 and write directly to the next level cache.</p></td>
+</tr>
+<tr class="row-odd"><td><p>.L2wb</p></td>
+<td><p>Write data to L2 but not the next level cache.</p></td>
+</tr>
+<tr class="row-even"><td><p>.L3uc</p></td>
+<td><p>Bypass L3 and write directly to the next level cache.</p></td>
+</tr>
+<tr class="row-odd"><td><p>.L3wb</p></td>
+<td><p>Write data to L3 but not the next level cache.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="nv">%r</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%off</span><span class="p">;</span>
+<span class="kd">.private</span><span class="w"> </span><span class="kt">.16b</span><span class="w"> </span><span class="nv">@P</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%a</span><span class="p">,</span><span class="w"> </span><span class="nv">%g</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.32b</span><span class="w"> </span><span class="nv">%v</span><span class="p">;</span>
+
+<span class="c1">// store a 16-bit element from register %r</span>
+<span class="c1">// into private array @P</span>
+<span class="nf">st.private.16b</span><span class="w"> </span><span class="p">[</span><span class="nv">@P</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">%off</span><span class="p">],</span><span class="w"> </span><span class="nv">%r</span><span class="p">;</span>
+
+<span class="c1">// store 32-bit vector of 2 elements from register %v</span>
+<span class="c1">// into global address [%g]</span>
+<span class="nf">st.global.v2.32b</span><span class="w"> </span><span class="p">[</span><span class="nv">%g</span><span class="p">],</span><span class="w"> </span><span class="nv">%v</span><span class="p">;</span>
+
+<span class="c1">// store 64-bit element from register %a into generic address [%g]</span>
+<span class="nf">st.generic.64b</span><span class="w"> </span><span class="p">[</span><span class="nv">%g</span><span class="p">],</span><span class="w"> </span><span class="nv">%a</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="instructions_cross_lane.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Sub-group Communication</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="instructions_synchronization.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">9. </span>Synchronization</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fatom">8.1. <code class="docutils literal notranslate"><span class="pre">fatom</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iatom">8.2. <code class="docutils literal notranslate"><span class="pre">iatom</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ld">8.3. <code class="docutils literal notranslate"><span class="pre">ld</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ld-param">8.4. <code class="docutils literal notranslate"><span class="pre">ld.param</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#st">8.5. <code class="docutils literal notranslate"><span class="pre">st</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Intel Corporation.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction &#8212; Portable ISA (PISA) Specification v0.1</title>
+    <title>3. Floating Point Support &#8212; Portable ISA (PISA) Specification v0.1</title>
   
   
   
@@ -48,11 +48,11 @@
     <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'floating_point';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Architecture Model" href="arch.html" />
-    <link rel="prev" title="Start" href="root.html" />
+    <link rel="next" title="4. Special Registers" href="special_registers.html" />
+    <link rel="prev" title="2. Address Spaces and Data Types" href="spaces_types.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -133,7 +133,7 @@
      
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="index.html">
   
   
   
@@ -163,11 +163,11 @@
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="floating_point.html">3. Floating Point Support</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">3. Floating Point Support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="special_registers.html">4. Special Registers</a></li>
 </ul>
 </details></li>
@@ -251,7 +251,7 @@
       
       
       
-      <li><a href="_sources/index.rst" target="_blank"
+      <li><a href="_sources/floating_point.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -335,7 +335,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction</h1>
+    <h1>Floating Point Support</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -345,8 +345,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-overview">Document Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types">3.1. Data Types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rounding-mode">3.2. Rounding Mode</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flush-to-zero-ftz">3.3. Flush-To-Zero (FTZ)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#not-a-number-nan">3.4. Not A Number (NaN)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#destination-saturation-dsat">3.5. Destination Saturation (DSat)</a></li>
 </ul>
             </nav>
         </div>
@@ -358,57 +361,111 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
-<p>This document specifies portable instruction set architecture (PISA) for Intel GPUs,
-providing a programming model and instruction set for general-purpose parallel programming.</p>
-<section id="goals">
-<h2>Goals<a class="headerlink" href="#goals" title="Link to this heading">#</a></h2>
-<p>The goals of PISA include:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Provide a stable, portable ISA for compilers targeting Intel GPUs</p></li>
-<li><p>Provide “close-to-the-metal” performance comparable to native machine ISA code</p></li>
-<li><p>Facilitate advanced programming support such as hand-written libraries and inline assembly</p></li>
-</ul>
-</div></blockquote>
+  <section id="floating-point-support">
+<h1><span class="section-number">3. </span>Floating Point Support<a class="headerlink" href="#floating-point-support" title="Link to this heading">#</a></h1>
+<section id="data-types">
+<span id="anchor-fp-type"></span><h2><span class="section-number">3.1. </span>Data Types<a class="headerlink" href="#data-types" title="Link to this heading">#</a></h2>
+<p>PISA virtual machine supports floating point data types of multiple precisions.</p>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id1">
+<caption><span class="caption-text"><strong>Floating Point Data Types</strong></span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Bit size</p></th>
+<th class="head"><p>Sign bit</p></th>
+<th class="head"><p>Exp bits</p></th>
+<th class="head"><p>Mantissa bits</p></th>
+<th class="head"><p>IEEE-754 compliance</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Single precision (.f)</p></td>
+<td><p>32</p></td>
+<td><p>[31:31]</p></td>
+<td><p>[30:23]</p></td>
+<td><p>[22:0]</p></td>
+<td><p>Y - IEEE-754-1985</p></td>
+</tr>
+<tr class="row-odd"><td><p>Double precision (.df)</p></td>
+<td><p>64</p></td>
+<td><p>[63:63]</p></td>
+<td><p>[62:52]</p></td>
+<td><p>[51:0]</p></td>
+<td><p>Y - IEEE-754-1985</p></td>
+</tr>
+<tr class="row-even"><td><p>Half float (.hf)</p></td>
+<td><p>16</p></td>
+<td><p>[15:15]</p></td>
+<td><p>[14:10]</p></td>
+<td><p>[9:0]</p></td>
+<td><p>Y - IEEE-754-2008</p></td>
+</tr>
+<tr class="row-odd"><td><p>Bfloat16 (.bf)</p></td>
+<td><p>16</p></td>
+<td><p>[15:15]</p></td>
+<td><p>[14:7]</p></td>
+<td><p>[6:0]</p></td>
+<td><p>N</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
-<section id="document-overview">
-<h2>Document Overview<a class="headerlink" href="#document-overview" title="Link to this heading">#</a></h2>
-<p>This document is organized as follows:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Architecture Model</p>
-<ul>
-<li><p><a class="reference internal" href="virtual_machine.html"><span class="doc">Virtual Machine</span></a> — OpenCL 3.0–based execution and memory model.</p></li>
-<li><p><a class="reference internal" href="spaces_types.html"><span class="doc">Address Spaces and Types</span></a> — address spaces and data types.</p></li>
-<li><p><a class="reference internal" href="floating_point.html"><span class="doc">Floating Point</span></a> — floating-point data types and semantics.</p></li>
-<li><p><a class="reference internal" href="special_registers.html"><span class="doc">Special Registers</span></a> — access to execution context.</p></li>
-</ul>
-</li>
-<li><p>Programming Interface</p>
-<ul>
-<li><p><a class="reference internal" href="syntax.html"><span class="doc">Assembly Syntax</span></a> — format and program structure of PISA assembly.</p></li>
-<li><p><a class="reference internal" href="variables.html"><span class="doc">Variables</span></a> — variable declarations, linkage, and initializers.</p></li>
-<li><p><a class="reference internal" href="operands.html"><span class="doc">Operands and Addressing</span></a> — operand types and usage patterns.</p></li>
-<li><p><a class="reference internal" href="calling_convention.html"><span class="doc">Calling Convention</span></a> — declaring and invoking kernels and functions.</p></li>
-<li><p><a class="reference internal" href="memory_access.html"><span class="doc">Memory Access</span></a> — memory access restrictions and semantics.</p></li>
-<li><p><a class="reference internal" href="compatibility.html"><span class="doc">Compatibility</span></a> — versioning and backward-compatibility guarantees.</p></li>
-</ul>
-</li>
-<li><p>Instruction Reference</p>
-<ul>
-<li><p><a class="reference internal" href="instruction_set.html"><span class="doc">Instruction Set</span></a> — description of core instructions.</p></li>
-</ul>
-</li>
-<li><p>Appendix</p>
-<ul>
-<li><p><a class="reference internal" href="directives.html"><span class="doc">Index of PISA directives</span></a></p></li>
-<li><p><a class="reference internal" href="notices.html"><span class="doc">Legal Notices and Disclaimers</span></a></p></li>
-</ul>
-</li>
-</ul>
-</div></blockquote>
+<section id="rounding-mode">
+<span id="anchor-fp-rndmode"></span><h2><span class="section-number">3.2. </span>Rounding Mode<a class="headerlink" href="#rounding-mode" title="Link to this heading">#</a></h2>
+<p>Rounding mode determines how the result of a floating-point operation is rounded
+when it cannot be represented exactly in the destination type. It is specified on
+a per-instruction basis using the rounding mode qualifier.</p>
+<div class="pst-scrollable-table-container"><table class="table table-center" id="id2">
+<caption><span class="caption-text"><strong>Floating Point Rounding Modes</strong></span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Qualifier</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.re</span></code></p></td>
+<td><p>Round to nearest even.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.rd</span></code></p></td>
+<td><p>Round down, toward minus infinity.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.ru</span></code></p></td>
+<td><p>Round up, toward plus infinity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.rz</span></code></p></td>
+<td><p>Round toward zero.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.rna</span></code></p></td>
+<td><p>Round to nearest, ties away from zero.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Default rounding mode for all floating-point operations is <code class="docutils literal notranslate"><span class="pre">.re</span></code>.</p>
+</div>
+</section>
+<section id="flush-to-zero-ftz">
+<span id="anchor-fp-ftz"></span><h2><span class="section-number">3.3. </span>Flush-To-Zero (FTZ)<a class="headerlink" href="#flush-to-zero-ftz" title="Link to this heading">#</a></h2>
+<p>By default PISA floating-point arithmetic instructions retain denormal values. A floating-point
+instruction may opt to flush its denormal sources and result (post rounding) to sign-preserving
+zero by specifying the <code class="docutils literal notranslate"><span class="pre">.ftz</span></code> qualifier.</p>
+</section>
+<section id="not-a-number-nan">
+<h2><span class="section-number">3.4. </span>Not A Number (NaN)<a class="headerlink" href="#not-a-number-nan" title="Link to this heading">#</a></h2>
+<p>An IEEE-754 NaN has an exponent field with all bits set and a nonzero fraction field.
+A signaling NaN (sNaN) has zero as the Most-Significant Bit (MSB) of its fraction field,
+while a quiet NaN (qNaN) has one as the MSB of its fraction field.</p>
+<p>When a qNaN is an input to a floating point instruction, the same qNaN is returned as output.
+If there are multiple NaN input values, one of them will be selected as the output NaN value.</p>
+</section>
+<section id="destination-saturation-dsat">
+<span id="anchor-fp-dsat"></span><h2><span class="section-number">3.5. </span>Destination Saturation (DSat)<a class="headerlink" href="#destination-saturation-dsat" title="Link to this heading">#</a></h2>
+<p>Floating-point instructions may support an optional destination saturation
+via <code class="docutils literal notranslate"><span class="pre">.dsat</span></code> qualifier. When <code class="docutils literal notranslate"><span class="pre">.dsat</span></code> is specified, the result of the instruction
+is clamped to the specific range or value. Exact behavior of this qualifier is
+specified in the instruction description.</p>
 </section>
 </section>
 
@@ -424,20 +481,20 @@ providing a programming model and instruction set for general-purpose parallel p
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="root.html"
+       href="spaces_types.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Start</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Address Spaces and Data Types</p>
       </div>
     </a>
     <a class="right-next"
-       href="arch.html"
+       href="special_registers.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Architecture Model</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Special Registers</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -457,8 +514,11 @@ providing a programming model and instruction set for general-purpose parallel p
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goals">Goals</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#document-overview">Document Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types">3.1. Data Types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rounding-mode">3.2. Rounding Mode</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flush-to-zero-ftz">3.3. Flush-To-Zero (FTZ)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#not-a-number-nan">3.4. Not A Number (NaN)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#destination-saturation-dsat">3.5. Destination Saturation (DSat)</a></li>
 </ul>
   </nav></div>
 

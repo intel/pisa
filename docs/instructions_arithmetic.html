@@ -1,0 +1,1801 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1. Integer Arithmetic &#8212; Portable ISA (PISA) Specification v0.1</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=201c2e38" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = '';</script>
+    <script>let toggleHintHide = '';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'instructions_arithmetic';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Floating Point" href="instructions_floating_point.html" />
+    <link rel="prev" title="Instruction Set" href="instruction_set.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Portable ISA (PISA) Specification v0.1</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="arch.html">Architecture Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtual_machine.html">1. Virtual Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spaces_types.html">2. Address Spaces and Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="floating_point.html">3. Floating Point Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="special_registers.html">4. Special Registers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="prog.html">Programming Model</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="syntax.html">1. Syntax and Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variables.html">2. Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="operands.html">3. Operands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calling_convention.html">4. Calling Convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory_access.html">5. Memory Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compatibility.html">6. Compatibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="instruction_set.html">Instruction Set</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">1. Integer Arithmetic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_floating_point.html">2. Floating Point</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_logical.html">3. Logic and Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_data_movement.html">4. Data Movement and Conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_comparison.html">5. Comparison and Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_control_flow.html">6. Control Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_cross_lane.html">7. Sub-group Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_memory.html">8. Memory and Atomics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions_synchronization.html">9. Synchronization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="appendix.html">Appendix</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="directives.html">1. Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notices.html">2. Notices</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/instructions_arithmetic.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Integer Arithmetic</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dp4a">1.1. <code class="docutils literal notranslate"><span class="pre">dp4a</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iabs">1.2. <code class="docutils literal notranslate"><span class="pre">iabs</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iadd">1.3. <code class="docutils literal notranslate"><span class="pre">iadd</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ineg">1.4. <code class="docutils literal notranslate"><span class="pre">ineg</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isub">1.5. <code class="docutils literal notranslate"><span class="pre">isub</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sdiv">1.6. <code class="docutils literal notranslate"><span class="pre">sdiv</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smad">1.7. <code class="docutils literal notranslate"><span class="pre">smad</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smax">1.8. <code class="docutils literal notranslate"><span class="pre">smax</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smin">1.9. <code class="docutils literal notranslate"><span class="pre">smin</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smul">1.10. <code class="docutils literal notranslate"><span class="pre">smul</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uaddc">1.11. <code class="docutils literal notranslate"><span class="pre">uaddc</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#udiv">1.12. <code class="docutils literal notranslate"><span class="pre">udiv</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umad">1.13. <code class="docutils literal notranslate"><span class="pre">umad</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umax">1.14. <code class="docutils literal notranslate"><span class="pre">umax</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umin">1.15. <code class="docutils literal notranslate"><span class="pre">umin</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umul">1.16. <code class="docutils literal notranslate"><span class="pre">umul</span></code></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="integer-arithmetic">
+<h1><span class="section-number">1. </span>Integer Arithmetic<a class="headerlink" href="#integer-arithmetic" title="Link to this heading">#</a></h1>
+<section id="dp4a">
+<h2><span class="section-number">1.1. </span><code class="docutils literal notranslate"><span class="pre">dp4a</span></code><a class="headerlink" href="#dp4a" title="Link to this heading">#</a></h2>
+<p id="instruction-dp4a">Compute the dot product of four pairs of bytes from two 32-bit operands, and add a 32-bit accumulator.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">dp4a.signedness&lt;<a class="reference internal" href="floating_point.html#anchor-fp-dsat"><span class="std std-ref">.dsat</span></a>&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, src0, src1, src2
+
+  .signedness = { .ss, .us, .su, .uu }
+  .type = { .32b }
+
+
+  - dst is a 32-bit register
+  - src0, src1, src2 can be 32-bit registers or immediates</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>qualifier <code class="docutils literal notranslate"><span class="pre">.dsat</span></code> must not be specified when qualifier <code class="docutils literal notranslate"><span class="pre">.signedness</span></code> is <code class="docutils literal notranslate"><span class="pre">.uu</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">src2_signed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">signedness</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">.</span><span class="n">us</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">.</span><span class="n">signedness</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">.</span><span class="n">ss</span>
+<span class="n">src1_signed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">signedness</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">.</span><span class="n">su</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">.</span><span class="n">signedness</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">.</span><span class="n">ss</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">src1_signed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">src1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src1_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src1_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src1_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">src1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src1_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src1_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src1_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">src2_signed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">src2_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src2</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src2_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src2</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src2_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src2</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src2_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src2</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">src2_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src2</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src2_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src2</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src2_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src2</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="w">  </span><span class="n">src2_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src2</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">],</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1_0</span><span class="o">*</span><span class="n">src2_0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1_1</span><span class="o">*</span><span class="n">src2_1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1_2</span><span class="o">*</span><span class="n">src2_2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1_3</span><span class="o">*</span><span class="n">src2_3</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<p>Enabling saturation via <code class="docutils literal notranslate"><span class="pre">.dsat</span></code> qualifier clamps the final result to between
+the min/max values representable by signed 32-bit integer. The addition of the
+results of the multiplications cannot overflow, but the addition of <code class="docutils literal notranslate"><span class="pre">src0</span></code>
+can cause overflow and therefore obeys the saturation control.</p>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2</span><span class="p">;</span>
+
+<span class="c1">// src0, src1, and src2 are treated as unsigned</span>
+<span class="nf">dp4a.uu.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2</span><span class="p">;</span>
+<span class="c1">// src1 is treated as signed, src2 as unsigned</span>
+<span class="nf">dp4a.su.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2</span><span class="p">;</span>
+<span class="c1">// src0, src1, and src2 are treated as signed with saturation</span>
+<span class="nf">dp4a.ss.dsat.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="iabs">
+<h2><span class="section-number">1.2. </span><code class="docutils literal notranslate"><span class="pre">iabs</span></code><a class="headerlink" href="#iabs" title="Link to this heading">#</a></h2>
+<p id="instruction-iabs">Compute the absolute value of an integer.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">iabs.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0 can be a register or an immediate
+
+  * src0 is interpreted as signed integer.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> and <code class="docutils literal notranslate"><span class="pre">src0</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">src0</span><span class="o">|</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+
+<span class="c1">// absolute value of a 32-bit element</span>
+<span class="nf">iabs.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="iadd">
+<h2><span class="section-number">1.3. </span><code class="docutils literal notranslate"><span class="pre">iadd</span></code><a class="headerlink" href="#iadd" title="Link to this heading">#</a></h2>
+<p id="instruction-iadd">Add two integer values.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">iadd&lt;<a class="reference internal" href="floating_point.html#anchor-fp-dsat"><span class="std std-ref">.dsat</span></a>&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, src0, src1
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">packed:</p>
+<pre class="syntax-literal literal-block">iadd&lt;<a class="reference internal" href="floating_point.html#anchor-fp-dsat"><span class="std std-ref">.dsat</span></a>&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, src0, src1
+
+  .type = { .8bx4, .16bx2 }
+
+
+  - dst, src0, src1 are packed registers
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>element count and bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code> and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match definitions of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.16bx2</span></code></span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.8bx4</span></code></span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id4" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<p>Enabling the <code class="docutils literal notranslate"><span class="pre">.dsat</span></code> qualifier clamps the final result to the minimum and
+maximum values representable by a signed integer of the element bitwidth of
+the specified <code class="docutils literal notranslate"><span class="pre">.type</span></code>.</p>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+
+<span class="c1">// addition of 32-bit elements</span>
+<span class="nf">iadd.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// element-wise addition of 4x8-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v4.8b</span><span class="w"> </span><span class="nv">%dst_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_4x8</span><span class="p">;</span>
+<span class="nf">iadd.8bx4</span><span class="w">  </span><span class="nv">%dst_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_4x8</span><span class="p">;</span>
+<span class="c1">// element-wise addition of 2x16-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.16b</span><span class="w"> </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="nf">iadd.16bx2</span><span class="w">  </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="ineg">
+<h2><span class="section-number">1.4. </span><code class="docutils literal notranslate"><span class="pre">ineg</span></code><a class="headerlink" href="#ineg" title="Link to this heading">#</a></h2>
+<p id="instruction-ineg">Negate an integer value.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">ineg.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0 can be a register or an immediate
+
+  * src0 is interpreted as signed integer.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> and <code class="docutils literal notranslate"><span class="pre">src0</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">src0</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+
+<span class="c1">// negate 32-bit element</span>
+<span class="nf">ineg.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="isub">
+<h2><span class="section-number">1.5. </span><code class="docutils literal notranslate"><span class="pre">isub</span></code><a class="headerlink" href="#isub" title="Link to this heading">#</a></h2>
+<p id="instruction-isub">Subtract two integer values.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">isub&lt;<a class="reference internal" href="floating_point.html#anchor-fp-dsat"><span class="std std-ref">.dsat</span></a>&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, src0, src1
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">packed:</p>
+<pre class="syntax-literal literal-block">isub&lt;<a class="reference internal" href="floating_point.html#anchor-fp-dsat"><span class="std std-ref">.dsat</span></a>&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, src0, src1
+
+  .type = { .16bx2 }
+
+
+  - dst, src0, src1 are 2x16-bit vector registers
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.16bx2</span></code></span><a class="headerlink" href="#id5" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id6" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<p>Enabling the <code class="docutils literal notranslate"><span class="pre">.dsat</span></code> qualifier clamps the final result to the minimum and
+maximum values representable by a signed integer of the element bitwidth of
+the specified <code class="docutils literal notranslate"><span class="pre">.type</span></code>.</p>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+
+<span class="c1">// subtraction of 32-bit elements</span>
+<span class="nf">isub.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// element-wise subtraction of 2x16-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.16b</span><span class="w"> </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="nf">isub.16bx2</span><span class="w">  </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="sdiv">
+<h2><span class="section-number">1.6. </span><code class="docutils literal notranslate"><span class="pre">sdiv</span></code><a class="headerlink" href="#sdiv" title="Link to this heading">#</a></h2>
+<p id="instruction-sdiv">Divide two signed integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">sdiv&lt;.output&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, src0, src1
+
+  .output = { <span class="bold-underlined-text">.quo</span>, .rem }
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.output</span></code> == <code class="docutils literal notranslate"><span class="pre">.rem</span></code></span><a class="headerlink" href="#id7" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id8" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<p>Division by zero is undefined behavior.</p>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+
+<span class="c1">// compute quotent from 32-bit signed integer division</span>
+<span class="nf">sdiv.quo.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// compute remainder from 32-bit signed integer division</span>
+<span class="nf">sdiv.rem.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="smad">
+<h2><span class="section-number">1.7. </span><code class="docutils literal notranslate"><span class="pre">smad</span></code><a class="headerlink" href="#smad" title="Link to this heading">#</a></h2>
+<p id="instruction-smad">Multiply and add signed integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Widening signed multiply-add:</p>
+<pre class="syntax-literal literal-block">smad.precision.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1, src2
+
+  .precision = { .full }
+  .type = { .16b, .32b }
+
+
+  - dst is a register
+  - src0, src1, src2 can be registers or immediates
+
+  * src0, src1, src2 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">src0</span></code> and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> and <code class="docutils literal notranslate"><span class="pre">src2</span></code> must be twice the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Signed multiply-add:</p>
+<pre class="syntax-literal literal-block">smad.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1, src2
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1, src2 can be registers or immediates
+
+  * src0, src1, src2 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, <code class="docutils literal notranslate"><span class="pre">src1</span></code>, and <code class="docutils literal notranslate"><span class="pre">src2</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">packed:</p>
+<pre class="syntax-literal literal-block">smad.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1, src2
+
+  .type = { .16bx2 }
+
+
+  - dst, src0, src1, src2 are 2x16-bit vector registers
+
+  * src0, src1, src2 are interpreted as signed integers.</pre>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.precision</span></code> == <code class="docutils literal notranslate"><span class="pre">.full</span></code></span><a class="headerlink" href="#id9" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">src0_extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src0</span><span class="p">,</span><span class="w"> </span><span class="n">bitwidth</span><span class="p">(.</span><span class="n">type</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">src1_extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">,</span><span class="w"> </span><span class="n">bitwidth</span><span class="p">(.</span><span class="n">type</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0_extend</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1_extend</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src2</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.16bx2</span></code></span><a class="headerlink" href="#id10" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src2</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src2</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id11" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%dst64</span><span class="p">,</span><span class="w"> </span><span class="nv">%src64</span><span class="p">;</span>
+
+<span class="c1">// signed multiply and add 32-bit elements</span>
+<span class="nf">smad.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2</span><span class="p">;</span>
+<span class="c1">// signed multiply and add 32-bit elements with full precision</span>
+<span class="nf">smad.full.32b</span><span class="w">  </span><span class="nv">%dst64</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src64</span><span class="p">;</span>
+<span class="c1">// element-wise signed multiply and add of 2x16-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.16b</span><span class="w"> </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2_packed</span><span class="p">;</span>
+<span class="nf">smad.16bx2</span><span class="w">  </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2_packed</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="smax">
+<h2><span class="section-number">1.8. </span><code class="docutils literal notranslate"><span class="pre">smax</span></code><a class="headerlink" href="#smax" title="Link to this heading">#</a></h2>
+<p id="instruction-smax">Find the maximum of two signed integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">smax.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">packed:</p>
+<pre class="syntax-literal literal-block">smax.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .8bx4, .16bx2 }
+
+
+  - dst, src0, src1 are packed registers
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>element count and bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code> and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match definitions of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.16bx2</span></code></span><a class="headerlink" href="#id12" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.8bx4</span></code></span><a class="headerlink" href="#id13" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id14" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+
+<span class="c1">// maximum element from 2 signed 32-bit elements</span>
+<span class="nf">smax.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// element-wise maximum of 2x16-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.16b</span><span class="w"> </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="nf">smax.16bx2</span><span class="w">  </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="c1">// element-wise maximum of 4x8-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v4.8b</span><span class="w"> </span><span class="nv">%dst_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_4x8</span><span class="p">;</span>
+<span class="nf">smax.8bx4</span><span class="w">  </span><span class="nv">%dst_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_4x8</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="smin">
+<h2><span class="section-number">1.9. </span><code class="docutils literal notranslate"><span class="pre">smin</span></code><a class="headerlink" href="#smin" title="Link to this heading">#</a></h2>
+<p id="instruction-smin">Find the minimum of two signed integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">smin.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">packed:</p>
+<pre class="syntax-literal literal-block">smin.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .8bx4, .16bx2 }
+
+
+  - dst, src0, src1 are packed registers
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>element count and bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code> and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match definitions of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.16bx2</span></code></span><a class="headerlink" href="#id15" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.8bx4</span></code></span><a class="headerlink" href="#id16" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">23</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">24</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id17">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id17" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+
+<span class="c1">// minimum element from 2 signed 32-bit elements</span>
+<span class="nf">smin.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// element-wise minimum of 2x16-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.16b</span><span class="w"> </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="nf">smin.16bx2</span><span class="w">  </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="c1">// element-wise minimum of 4x8-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v4.8b</span><span class="w"> </span><span class="nv">%dst_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_4x8</span><span class="p">;</span>
+<span class="nf">smin.8bx4</span><span class="w">  </span><span class="nv">%dst_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_4x8</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_4x8</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="smul">
+<h2><span class="section-number">1.10. </span><code class="docutils literal notranslate"><span class="pre">smul</span></code><a class="headerlink" href="#smul" title="Link to this heading">#</a></h2>
+<p id="instruction-smul">Multiply two signed integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Widening signed multiply:</p>
+<pre class="syntax-literal literal-block">smul.precision.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .precision = { .full }
+  .type = { .16b, .32b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">src0</span></code> and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> must be twice the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Signed multiply:</p>
+<pre class="syntax-literal literal-block">smul.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">packed:</p>
+<pre class="syntax-literal literal-block">smul.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16bx2 }
+
+
+  - dst, src0, src1 are 2x16-bit vector registers
+
+  * src0, src1 are interpreted as signed integers.</pre>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id18">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.precision</span></code> == <code class="docutils literal notranslate"><span class="pre">.full</span></code></span><a class="headerlink" href="#id18" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">src0_extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src0</span><span class="p">,</span><span class="w"> </span><span class="n">bitwidth</span><span class="p">(.</span><span class="n">type</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">src1_extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sign_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">,</span><span class="w"> </span><span class="n">bitwidth</span><span class="p">(.</span><span class="n">type</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0_extend</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1_extend</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.16bx2</span></code></span><a class="headerlink" href="#id19" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id20">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id20" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%dst64</span><span class="p">;</span>
+
+<span class="c1">// signed multiply 32-bit elements</span>
+<span class="nf">smul.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// signed multiply 32-bit elements with full precision</span>
+<span class="nf">smul.full.32b</span><span class="w">  </span><span class="nv">%dst64</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// element-wise signed multiply of 2x16-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.16b</span><span class="w"> </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="nf">smul.16bx2</span><span class="w">  </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="uaddc">
+<h2><span class="section-number">1.11. </span><code class="docutils literal notranslate"><span class="pre">uaddc</span></code><a class="headerlink" href="#uaddc" title="Link to this heading">#</a></h2>
+<p id="instruction-uaddc">Add unsigned integers with carry.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Add with carry-in:</p>
+<pre class="syntax-literal literal-block">uaddc.ci.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1, carry-in
+
+  .type = { .32b }
+
+
+  - dst is a 32-bit register
+  - src0, src1 can be 32-bit registers or immediates
+  - carry-in is a predicate register
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Add with carry-out:</p>
+<pre class="syntax-literal literal-block">uaddc.co.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, carry-out, src0, src1
+
+  .type = { .32b }
+
+
+  - dst is a 32-bit register
+  - carry-out is a predicate register
+  - src0, src1 can be 32-bit registers or immediates
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Add with carry-in and carry-out:</p>
+<pre class="syntax-literal literal-block">uaddc.ci.co.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, carry-out, src0, src1, carry-in
+
+  .type = { .32b }
+
+
+  - dst is a 32-bit register
+  - carry-out, carry-in are predicate registers
+  - src0, src1 can be 32-bit registers or immediates
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="s1">&#39;.ci&#39;</span> <span class="ow">is</span> <span class="nb">set</span><span class="p">)</span>
+   <span class="n">dst</span> <span class="o">=</span> <span class="n">src0</span> <span class="o">+</span> <span class="n">src1</span> <span class="o">+</span> <span class="n">carry</span><span class="o">-</span><span class="ow">in</span>
+<span class="k">else</span>
+   <span class="n">dst</span> <span class="o">=</span> <span class="n">src0</span> <span class="o">+</span> <span class="n">src1</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="s1">&#39;.co&#39;</span> <span class="ow">is</span> <span class="nb">set</span><span class="p">)</span>
+   <span class="n">carry</span><span class="o">-</span><span class="n">out</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">the</span> <span class="n">result</span> <span class="n">overflows</span> <span class="n">uint32</span><span class="p">,</span> <span class="mi">0</span> <span class="n">otherwise</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="literal-block-wrapper docutils container" id="id21">
+<div class="code-block-caption"><span class="caption-text">Add two 32-bit unsigned values with carry</span><a class="headerlink" href="#id21" title="Link to this code">#</a></div>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="kd">.pred</span><span class="w"> </span><span class="nv">%pin</span><span class="p">,</span><span class="w"> </span><span class="nv">%pout</span><span class="p">;</span>
+
+<span class="c1">// add two 32-bit unsigned values with carry-out</span>
+<span class="nf">uaddc.co.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%pout</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// add two 32-bit unsigned values with carry-in</span>
+<span class="nf">uaddc.ci.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%pin</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id22">
+<div class="code-block-caption"><span class="caption-text">64-bit unsigned addition emulated with two 32-bit uaddc instructions</span><a class="headerlink" href="#id22" title="Link to this code">#</a></div>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.32b</span><span class="w"> </span><span class="nv">%dst_vec</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_vec</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_vec</span><span class="p">;</span>
+<span class="kd">.pred</span><span class="w"> </span><span class="nv">%p0</span><span class="p">;</span>
+
+<span class="c1">// unpack 64-bit operands into 32-bit halves (.x = low, .y = high)</span>
+<span class="nf">mov.64b</span><span class="w">  </span><span class="nv">%src0_vec</span><span class="na">.xy</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">;</span>
+<span class="nf">mov.64b</span><span class="w">  </span><span class="nv">%src1_vec</span><span class="na">.xy</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// add low 32-bit halves with carry-out</span>
+<span class="nf">uaddc.co.32b</span><span class="w">  </span><span class="nv">%dst_vec</span><span class="na">.x</span><span class="p">,</span><span class="w"> </span><span class="nv">%p0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_vec</span><span class="na">.x</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_vec</span><span class="na">.x</span><span class="p">;</span>
+<span class="c1">// add high 32-bit halves with carry-in</span>
+<span class="nf">uaddc.ci.32b</span><span class="w">  </span><span class="nv">%dst_vec</span><span class="na">.y</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_vec</span><span class="na">.y</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_vec</span><span class="na">.y</span><span class="p">,</span><span class="w"> </span><span class="nv">%p0</span><span class="p">;</span>
+<span class="c1">// pack 32-bit halves back into 64-bit result</span>
+<span class="nf">mov.64b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%dst_vec</span><span class="na">.xy</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="udiv">
+<h2><span class="section-number">1.12. </span><code class="docutils literal notranslate"><span class="pre">udiv</span></code><a class="headerlink" href="#udiv" title="Link to this heading">#</a></h2>
+<p id="instruction-udiv">Divide two unsigned integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">udiv&lt;.output&gt;<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">.type</span></a> dst, src0, src1
+
+  .output = { <span class="bold-underlined-text">.quo</span>, .rem }
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id23">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.output</span></code> == <code class="docutils literal notranslate"><span class="pre">.rem</span></code></span><a class="headerlink" href="#id23" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id24">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id24" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes:</p>
+<p>Division by zero is undefined behavior.</p>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+
+<span class="c1">// compute quotent from 32-bit unsigned integer division</span>
+<span class="nf">udiv.quo.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// compute remainder from 32-bit unsigned integer division</span>
+<span class="nf">udiv.rem.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="umad">
+<h2><span class="section-number">1.13. </span><code class="docutils literal notranslate"><span class="pre">umad</span></code><a class="headerlink" href="#umad" title="Link to this heading">#</a></h2>
+<p id="instruction-umad">Multiply and add unsigned integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Widening unsigned multiply-add:</p>
+<pre class="syntax-literal literal-block">umad.precision.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1, src2
+
+  .precision = { .full }
+  .type = { .16b, .32b }
+
+
+  - dst is a register
+  - src0, src1, src2 can be registers or immediates
+
+  * src0, src1, src2 are interpreted as unsigned integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">src0</span></code> and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> and <code class="docutils literal notranslate"><span class="pre">src2</span></code> must be twice the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Unsigned multiply-add:</p>
+<pre class="syntax-literal literal-block">umad.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1, src2
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1, src2 can be registers or immediates
+
+  * src0, src1, src2 are interpreted as unsigned integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, <code class="docutils literal notranslate"><span class="pre">src1</span></code>, and <code class="docutils literal notranslate"><span class="pre">src2</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id25">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.precision</span></code> == <code class="docutils literal notranslate"><span class="pre">.full</span></code></span><a class="headerlink" href="#id25" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">src0_extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src0</span><span class="p">,</span><span class="w"> </span><span class="n">bitwidth</span><span class="p">(.</span><span class="n">type</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">src1_extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">,</span><span class="w"> </span><span class="n">bitwidth</span><span class="p">(.</span><span class="n">type</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0_extend</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1_extend</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src2</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id26">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id26" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">src2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%dst64</span><span class="p">,</span><span class="w"> </span><span class="nv">%src64</span><span class="p">;</span>
+
+<span class="c1">// unsigned multiply and add 32-bit elements</span>
+<span class="nf">umad.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src2</span><span class="p">;</span>
+<span class="c1">// unsigned multiply and add 32-bit elements with full precision</span>
+<span class="nf">umad.full.32b</span><span class="w">  </span><span class="nv">%dst64</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">,</span><span class="w"> </span><span class="nv">%src64</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="umax">
+<h2><span class="section-number">1.14. </span><code class="docutils literal notranslate"><span class="pre">umax</span></code><a class="headerlink" href="#umax" title="Link to this heading">#</a></h2>
+<p id="instruction-umax">Find the maximum of two unsigned integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">umax.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">packed:</p>
+<pre class="syntax-literal literal-block">umax.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16bx2 }
+
+
+  - dst, src0, src1 are 2x16-bit vector registers
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id27">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.16bx2</span></code></span><a class="headerlink" href="#id27" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id28">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id28" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">src1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+
+<span class="c1">// maximum element from 2 unsigned 32-bit elements</span>
+<span class="nf">umax.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// element-wise maximum of 2x16-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.16b</span><span class="w"> </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="nf">umax.16bx2</span><span class="w">  </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="umin">
+<h2><span class="section-number">1.15. </span><code class="docutils literal notranslate"><span class="pre">umin</span></code><a class="headerlink" href="#umin" title="Link to this heading">#</a></h2>
+<p id="instruction-umin">Find the minimum of two unsigned integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Syntax:</p>
+<pre class="syntax-literal literal-block">umin.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">packed:</p>
+<pre class="syntax-literal literal-block">umin.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16bx2 }
+
+
+  - dst, src0, src1 are 2x16-bit vector registers
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id29">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.type</span></code> == <code class="docutils literal notranslate"><span class="pre">.16bx2</span></code></span><a class="headerlink" href="#id29" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">15</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dst</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span><span class="p">[</span><span class="mi">31</span><span class="o">:</span><span class="mi">16</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id30">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id30" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">src1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+
+<span class="c1">// minimum element from 2 unsigned 32-bit elements</span>
+<span class="nf">umin.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// element-wise minimum of 2x16-bit packed values</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.v2.16b</span><span class="w"> </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+<span class="nf">umin.16bx2</span><span class="w">  </span><span class="nv">%dst_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0_packed</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1_packed</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="umul">
+<h2><span class="section-number">1.16. </span><code class="docutils literal notranslate"><span class="pre">umul</span></code><a class="headerlink" href="#umul" title="Link to this heading">#</a></h2>
+<p id="instruction-umul">Multiply two unsigned integers.</p>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Widening unsigned multiply:</p>
+<pre class="syntax-literal literal-block">umul.precision.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .precision = { .full }
+  .type = { .16b, .32b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">src0</span></code> and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code> must be twice the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="dropdown syntax-admonition toggle-shown admonition">
+<p class="admonition-title">Unsigned multiply:</p>
+<pre class="syntax-literal literal-block">umul.<a class="reference internal" href="spaces_types.html#anchor-data-types"><span class="std std-ref">type</span></a> dst, src0, src1
+
+  .type = { .16b, .32b, .64b }
+
+
+  - dst is a register
+  - src0, src1 can be registers or immediates
+
+  * src0, src1 are interpreted as unsigned integers.</pre>
+<div class="admonition-restrictions admonition">
+<p class="admonition-title">Restrictions</p>
+<ul class="simple">
+<li><p>bitwidth of <code class="docutils literal notranslate"><span class="pre">dst</span></code>, <code class="docutils literal notranslate"><span class="pre">src0</span></code>, and <code class="docutils literal notranslate"><span class="pre">src1</span></code> must match the bitwidth of <code class="docutils literal notranslate"><span class="pre">.type</span></code></p></li>
+</ul>
+</div>
+<div class="admonition-pisa-notes admonition">
+<p class="admonition-title">PISA Notes</p>
+<ul class="simple">
+<li><p>introduced in PISA version <strong>0.1</strong></p></li>
+<li><p>requires PISA target <strong>100</strong> or compatible</p></li>
+</ul>
+</div>
+</div>
+<div class="admonition-semantics admonition">
+<p class="admonition-title">Semantics:</p>
+<div class="literal-block-wrapper docutils container" id="id31">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">.precision</span></code> == <code class="docutils literal notranslate"><span class="pre">.full</span></code></span><a class="headerlink" href="#id31" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">src0_extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src0</span><span class="p">,</span><span class="w"> </span><span class="n">bitwidth</span><span class="p">(.</span><span class="n">type</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">src1_extend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero_extend</span><span class="p">(</span><span class="n">src1</span><span class="p">,</span><span class="w"> </span><span class="n">bitwidth</span><span class="p">(.</span><span class="n">type</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0_extend</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1_extend</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id32">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">default</span></code></span><a class="headerlink" href="#id32" title="Link to this code">#</a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition-examples admonition">
+<p class="admonition-title">Examples:</p>
+<div class="highlight-pisasm notranslate"><div class="highlight"><pre><span></span><span class="kd">.reg</span><span class="w"> </span><span class="kt">.32b</span><span class="w"> </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="kd">.reg</span><span class="w"> </span><span class="kt">.64b</span><span class="w"> </span><span class="nv">%dst64</span><span class="p">;</span>
+
+<span class="c1">// unsigned multiply 32-bit elements</span>
+<span class="nf">umul.32b</span><span class="w">  </span><span class="nv">%dst</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+<span class="c1">// unsigned multiply 32-bit elements with full precision</span>
+<span class="nf">umul.full.32b</span><span class="w">  </span><span class="nv">%dst64</span><span class="p">,</span><span class="w"> </span><span class="nv">%src0</span><span class="p">,</span><span class="w"> </span><span class="nv">%src1</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="instruction_set.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Instruction Set</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="instructions_floating_point.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Floating Point</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dp4a">1.1. <code class="docutils literal notranslate"><span class="pre">dp4a</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iabs">1.2. <code class="docutils literal notranslate"><span class="pre">iabs</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iadd">1.3. <code class="docutils literal notranslate"><span class="pre">iadd</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ineg">1.4. <code class="docutils literal notranslate"><span class="pre">ineg</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#isub">1.5. <code class="docutils literal notranslate"><span class="pre">isub</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sdiv">1.6. <code class="docutils literal notranslate"><span class="pre">sdiv</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smad">1.7. <code class="docutils literal notranslate"><span class="pre">smad</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smax">1.8. <code class="docutils literal notranslate"><span class="pre">smax</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smin">1.9. <code class="docutils literal notranslate"><span class="pre">smin</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smul">1.10. <code class="docutils literal notranslate"><span class="pre">smul</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uaddc">1.11. <code class="docutils literal notranslate"><span class="pre">uaddc</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#udiv">1.12. <code class="docutils literal notranslate"><span class="pre">udiv</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umad">1.13. <code class="docutils literal notranslate"><span class="pre">umad</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umax">1.14. <code class="docutils literal notranslate"><span class="pre">umax</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umin">1.15. <code class="docutils literal notranslate"><span class="pre">umin</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#umul">1.16. <code class="docutils literal notranslate"><span class="pre">umul</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Intel Corporation.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
